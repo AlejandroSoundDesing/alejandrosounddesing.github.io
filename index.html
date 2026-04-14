@@ -833,47 +833,11 @@
       mouseSpd = 0;
     });
 
-    // ── TOUCH EVENTS (mobile) ─────────────────────────────────────
-    function handleTouch(e) {
-      e.preventDefault();
-      const touch = e.touches[0];
-      if (!touch) return;
-      const r = hero.getBoundingClientRect();
-      pmX = mX; pmY = mY;
-      mX = Math.max(0, Math.min(1, (touch.clientX - r.left) / r.width));
-      mY = Math.max(0, Math.min(1, (touch.clientY - r.top)  / r.height));
-
-      const dx = mX - pmX, dy = mY - pmY;
-      mouseSpd = Math.sqrt(dx*dx + dy*dy);
-
-      targetRX = 0.18 + (mY - 0.5) * 0.9;
-      targetRY = (mX - 0.5) * 1.8;
-      inHero   = true;
-
-      if (!hintHidden) { hintEl.classList.add('hidden'); hintHidden = true; }
-      if (!AC) initAudio();
-
-      if (AC && soundOn && mouseSpd > 0.012) {
-        const idx = Math.floor(mX * (SCALE_HZ.length - 1));
-        playNote(SCALE_HZ[Math.max(0, Math.min(SCALE_HZ.length - 1, idx))], mouseSpd * 40);
-      }
-    }
-
-    hero.addEventListener('touchstart', e => {
-      e.preventDefault();
-      const touch = e.touches[0];
-      if (!touch) return;
-      const r = hero.getBoundingClientRect();
-      mX = Math.max(0, Math.min(1, (touch.clientX - r.left) / r.width));
-      mY = Math.max(0, Math.min(1, (touch.clientY - r.top)  / r.height));
-      pmX = mX; pmY = mY;
-      inHero = true;
+    // ── TOUCH (mobile): solo init audio, scroll libre, esfera auto-spin ──
+    hero.addEventListener('touchstart', () => {
       if (!AC) initAudio();
       if (!hintHidden) { hintEl.classList.add('hidden'); hintHidden = true; }
-    }, {passive: false});
-
-    hero.addEventListener('touchmove',  handleTouch, {passive: false});
-    hero.addEventListener('touchend',   () => { inHero = false; mouseSpd = 0; });
+    }, {passive: true});
 
     // ── RENDER LOOP ──────────────────────────────────────────────
     function render() {
@@ -980,3 +944,4 @@
   </script>
 </body>
 </html>
+
