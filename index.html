@@ -5,16 +5,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Alejandro García Soto — Sonido · IA · Arte</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=EB+Garamond:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%2300A2E8'/%3E%3Ctext x='50%25' y='58%25' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='700' font-size='14'%3EA%3C/text%3E%3C/svg%3E">
   <style>
     :root {
-      --bg:     #f4f3ef;
-      --ink:    #0f0f0e;
-      --mid:    #7a7774;
-      --line:   #cccac4;
-      --accent: #e8380d;
-      --mono:   'Space Mono', monospace;
-      --serif:  'EB Garamond', serif;
+      --bg:       #ffffff;
+      --bg-soft:  #f4f9fc;
+      --ink:      #002a4e;        /* azul profundo, casi tinta */
+      --ink-soft: #4a6b85;
+      --mid:      #7a8fa1;
+      --line:     #e1edf5;
+      --line-2:   #cfe3f0;
+      --cyan:     #00a2e8;        /* cian BBVA */
+      --cyan-dk:  #0080c4;
+      --cyan-lt:  #e6f5fc;
+      --radius:   20px;
+      --radius-lg:28px;
+      --radius-pill:999px;
+      --sans:     'DM Sans', system-ui, -apple-system, sans-serif;
+      --shadow-sm: 0 1px 2px rgba(0, 42, 78, .04), 0 2px 8px rgba(0, 42, 78, .04);
+      --shadow-md: 0 4px 16px rgba(0, 42, 78, .06), 0 8px 32px rgba(0, 42, 78, .05);
+      --shadow-lg: 0 8px 24px rgba(0, 42, 78, .08), 0 16px 48px rgba(0, 42, 78, .08);
     }
 
     *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
@@ -23,301 +35,541 @@
     body {
       background: var(--bg);
       color: var(--ink);
-      font-family: var(--serif);
-      font-size: 18px;
+      font-family: var(--sans);
+      font-size: 16px;
       line-height: 1.6;
       overflow-x: hidden;
-      cursor: crosshair;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
 
-    /* ── GRAIN ── */
-    body::after {
-      content:''; position:fixed; inset:-50%; width:200%; height:200%;
-      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
-      opacity:.025; pointer-events:none; z-index:9999;
-      animation: grain .5s steps(1) infinite;
-    }
-    @keyframes grain {
-      0%,100%{transform:translate(0,0)}   10%{transform:translate(-2%,-1%)}
-      20%{transform:translate(1%,2%)}     30%{transform:translate(-1%,1%)}
-      40%{transform:translate(2%,-2%)}    50%{transform:translate(-2%,2%)}
-      60%{transform:translate(1%,-1%)}    70%{transform:translate(-1%,2%)}
-      80%{transform:translate(2%,1%)}     90%{transform:translate(-2%,-2%)}
-    }
+    a { color: inherit; text-decoration: none; }
 
     /* ── NAV ── */
     nav {
-      position:fixed; top:0; left:0; right:0; z-index:200;
-      display:flex; justify-content:space-between; align-items:center;
-      padding:1.1rem 3rem;
-      background:rgba(244,243,239,.93);
-      backdrop-filter:blur(10px);
-      border-bottom:1px solid var(--line);
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1rem 2.5rem;
+      background: rgba(255, 255, 255, .85);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--line);
     }
     .logo {
-      font-family:var(--mono); font-size:.72rem;
-      letter-spacing:.12em; text-decoration:none; color:var(--ink);
+      display: flex; align-items: center; gap: .6rem;
+      font-weight: 700; font-size: 1.05rem; color: var(--ink);
+      letter-spacing: -.01em;
     }
-    nav ul { list-style:none; display:flex; gap:2.5rem; }
-    nav a  {
-      font-family:var(--mono); font-size:.63rem; letter-spacing:.09em;
-      text-transform:uppercase; text-decoration:none;
-      color:var(--mid); transition:color .2s;
+    .logo-dot {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: var(--cyan);
+      display: flex; align-items: center; justify-content: center;
+      color: white; font-weight: 700; font-size: .85rem;
     }
-    nav a:hover { color:var(--accent); }
-    .nav-works { color:var(--ink) !important; }
-    .nav-works:hover { color:var(--accent) !important; }
+    nav ul { list-style: none; display: flex; gap: 2rem; align-items: center; }
+    nav a.nav-link {
+      font-size: .92rem; font-weight: 500;
+      color: var(--ink-soft);
+      transition: color .2s;
+    }
+    nav a.nav-link:hover { color: var(--cyan); }
+    .nav-cta {
+      background: var(--cyan);
+      color: white !important;
+      padding: .6rem 1.3rem;
+      border-radius: var(--radius-pill);
+      font-weight: 600; font-size: .88rem;
+      transition: background .2s, transform .1s;
+    }
+    .nav-cta:hover { background: var(--cyan-dk); color: white !important; }
+    .nav-cta:active { transform: scale(.97); }
 
     /* ── HERO ── */
     #hero {
-      height:100vh;
-      height:100svh; /* small viewport height — fixes iOS address bar */
-      position:relative; overflow:hidden;
-      display:flex; flex-direction:column; justify-content:flex-end;
-      padding:2.5rem 3rem 3rem;
+      position: relative;
+      min-height: 92vh;
+      padding: 8rem 2.5rem 5rem;
+      background: linear-gradient(180deg, var(--bg-soft) 0%, var(--bg) 100%);
+      overflow: hidden;
+      display: flex; align-items: center;
     }
-
-    /* Lorenz canvas fills the hero */
-    #lorenz {
-      position:absolute; inset:0;
-      width:100%; height:100%;
-      pointer-events:none;
+    .hero-container {
+      max-width: 1280px; margin: 0 auto; width: 100%;
+      display: grid; grid-template-columns: 1.1fr .9fr;
+      gap: 4rem; align-items: center;
     }
-
-    /* Optional background image layer — add your image URL here */
-    #hero-img {
-      position:absolute; inset:0;
-      background: url('') center/cover no-repeat;
-      opacity:.05;
-      mix-blend-mode:multiply;
-      pointer-events:none;
+    .hero-pill {
+      display: inline-flex; align-items: center; gap: .5rem;
+      background: white;
+      border: 1px solid var(--line-2);
+      padding: .45rem 1rem;
+      border-radius: var(--radius-pill);
+      font-size: .82rem; font-weight: 500;
+      color: var(--ink-soft);
+      margin-bottom: 1.8rem;
+      box-shadow: var(--shadow-sm);
     }
-
-    /* Hero text overlaid */
-    .hero-bottom {
-      position:relative; z-index:10;
-      display:flex; flex-direction:column; gap:1rem;
+    .hero-pill::before {
+      content: ''; width: 8px; height: 8px; border-radius: 50%;
+      background: var(--cyan);
+      box-shadow: 0 0 0 4px rgba(0, 162, 232, .18);
     }
-
-    .hero-eyebrow {
-      font-family:var(--mono); font-size:.58rem;
-      letter-spacing:.18em; text-transform:uppercase;
-      color:var(--mid);
-    }
-
     .hero-name {
-      font-family:var(--serif); font-weight:400;
-      font-size:clamp(2rem, 4.5vw, 3.8rem);
-      line-height:1.05; letter-spacing:-.01em;
+      font-size: clamp(2.4rem, 5.2vw, 4.2rem);
+      font-weight: 700;
+      line-height: 1.05;
+      letter-spacing: -.025em;
+      color: var(--ink);
+      margin-bottom: 1.4rem;
     }
-    .hero-name em { font-style:italic; color:var(--mid); }
-
+    .hero-name span { color: var(--cyan); }
+    .hero-sub {
+      font-size: 1.15rem;
+      color: var(--ink-soft);
+      line-height: 1.6;
+      max-width: 520px;
+      margin-bottom: 2rem;
+    }
     .hero-tags {
-      display:flex; flex-wrap:wrap; gap:.45rem; margin-top:.2rem;
+      display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 2.5rem;
     }
     .hero-tag {
-      font-family:var(--mono); font-size:.56rem; letter-spacing:.1em;
-      text-transform:uppercase; border:1px solid var(--line);
-      padding:.28rem .65rem; color:var(--mid);
-      background:rgba(244,243,239,.75);
+      background: white;
+      border: 1px solid var(--line-2);
+      padding: .45rem 1rem;
+      border-radius: var(--radius-pill);
+      font-size: .82rem;
+      font-weight: 500;
+      color: var(--ink-soft);
     }
+    .hero-cta-row { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .btn {
+      display: inline-flex; align-items: center; gap: .55rem;
+      padding: .95rem 1.8rem;
+      border-radius: var(--radius-pill);
+      font-weight: 600; font-size: .95rem;
+      border: none; cursor: pointer;
+      transition: background .2s, transform .1s, box-shadow .2s;
+      font-family: inherit;
+    }
+    .btn-primary {
+      background: var(--cyan); color: white;
+      box-shadow: 0 4px 14px rgba(0, 162, 232, .28);
+    }
+    .btn-primary:hover { background: var(--cyan-dk); box-shadow: 0 6px 20px rgba(0, 162, 232, .38); }
+    .btn-primary:active { transform: scale(.98); }
+    .btn-ghost {
+      background: white; color: var(--ink);
+      border: 1px solid var(--line-2);
+    }
+    .btn-ghost:hover { background: var(--bg-soft); border-color: var(--cyan); color: var(--cyan); }
 
-    /* ASCII corner — top right */
-    .hero-ascii {
-      position:absolute; top:5.5rem; right:3rem;
-      font-family:var(--mono); font-size:.46rem;
-      line-height:1.5; color:rgba(15,15,14,.18);
-      white-space:pre; user-select:none; pointer-events:none;
+    /* Hero visual — círculos suaves cian */
+    .hero-visual {
+      position: relative;
+      aspect-ratio: 1 / 1;
+      max-width: 520px;
+      margin-left: auto;
     }
-
-    /* Live Lorenz params display */
-    #lorenz-params {
-      position:absolute; right:3rem; bottom:3rem; z-index:11;
-      font-family:var(--mono); font-size:.52rem;
-      letter-spacing:.1em; color:rgba(15,15,14,.28);
-      pointer-events:none; line-height:1.6;
-      text-align:right;
-    }
-
-    /* Mouse hint — fades after first interaction */
-    #mouse-hint {
-      position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
-      z-index:11; text-align:center;
-      font-family:var(--mono); font-size:.55rem;
-      letter-spacing:.12em; text-transform:uppercase;
-      color:rgba(15,15,14,.25);
-      pointer-events:none;
-      transition:opacity 1.2s ease;
-    }
-    #mouse-hint pre { font-size:.44rem; line-height:1.5; color:rgba(15,15,14,.15); }
-    #mouse-hint.hidden { opacity:0; }
-
-    /* Hide system cursor in hero — only on pointer/hover devices */
-    @media (hover: hover) and (pointer: fine) {
-      #hero { cursor:none; }
-    }
-
-    /* Sound toggle */
-    #sound-toggle {
-      position:absolute; top:5.5rem; left:3rem; z-index:12;
-      font-family:var(--mono); font-size:1rem;
-      color:rgba(15,15,14,.3); background:none; border:none;
-      cursor:pointer; transition:color .2s, opacity .2s;
-      padding:.5rem; user-select:none;
-      /* bigger tap target on mobile */
-      min-width:2.5rem; min-height:2.5rem;
-    }
-    @media (hover: hover) and (pointer: fine) {
-      #sound-toggle { cursor:none; }
-      #sound-toggle:hover { color:rgba(15,15,14,.65); }
-    }
-
-    /* Scroll indicator */
-    .scroll-hint {
-      position:absolute; right:3rem; bottom:3rem; z-index:10;
-      font-family:var(--mono); font-size:.5rem;
-      letter-spacing:.12em; color:var(--mid);
-      writing-mode:vertical-rl;
-    }
+    .hero-visual svg { width: 100%; height: 100%; }
 
     /* ── SECTIONS ── */
     section:not(#hero) {
-      padding:6rem 3rem;
-      border-top:1px solid var(--line);
-      background:var(--bg);
+      padding: 6rem 2.5rem;
+      max-width: 1280px; margin: 0 auto;
     }
-
-    .sec-head {
-      display:flex; align-items:baseline; gap:1.2rem; margin-bottom:4rem;
+    .sec-head { margin-bottom: 3.5rem; max-width: 720px; }
+    .sec-eyebrow {
+      display: inline-block;
+      background: var(--cyan-lt);
+      color: var(--cyan-dk);
+      padding: .35rem .9rem;
+      border-radius: var(--radius-pill);
+      font-size: .78rem; font-weight: 600;
+      letter-spacing: .02em;
+      margin-bottom: 1rem;
     }
-    .sec-num { font-family:var(--mono); font-size:.58rem; color:var(--line); letter-spacing:.1em; }
-    h2.sec-title { font-family:var(--serif); font-size:clamp(1.8rem,4vw,3.4rem); font-weight:400; font-style:italic; }
+    .sec-title {
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -.02em;
+      color: var(--ink);
+      margin-bottom: .8rem;
+    }
+    .sec-title span { color: var(--cyan); }
+    .sec-lead {
+      font-size: 1.1rem;
+      color: var(--ink-soft);
+      line-height: 1.6;
+    }
 
     /* ── ABOUT ── */
-    .about-grid { display:grid; grid-template-columns:3fr 1.4fr; gap:5rem; }
-    .about-text p { font-size:1.2rem; line-height:1.78; }
-    .about-text p + p { margin-top:1rem; }
-
-    /* Pure Data patch ASCII */
-    .pd-patch {
-      font-family:var(--mono); font-size:.5rem; line-height:1.7;
-      color:var(--line); white-space:pre;
-      border-left:2px solid var(--line); padding-left:1.5rem;
-      margin-top:2.5rem;
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1.6fr 1fr;
+      gap: 3rem;
+      align-items: start;
     }
+    .about-text {
+      background: var(--bg-soft);
+      border-radius: var(--radius-lg);
+      padding: 2.5rem;
+    }
+    .about-text p {
+      font-size: 1.05rem;
+      color: var(--ink);
+      line-height: 1.75;
+    }
+    .about-text p + p { margin-top: 1.1rem; }
+    .about-text p strong { color: var(--cyan-dk); font-weight: 600; }
 
-    .meta-stack { display:flex; flex-direction:column; gap:1.4rem; }
-    .meta-row { border-top:1px solid var(--line); padding-top:.7rem; }
-    .meta-lbl { font-family:var(--mono); font-size:.56rem; letter-spacing:.1em; text-transform:uppercase; color:var(--mid); margin-bottom:.25rem; }
-    .meta-val { font-family:var(--serif); font-size:1rem; }
+    .meta-card {
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      padding: 1.8rem;
+      box-shadow: var(--shadow-sm);
+    }
+    .meta-row {
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--line);
+    }
+    .meta-row:first-child { padding-top: 0; }
+    .meta-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .meta-lbl {
+      font-size: .78rem; font-weight: 600;
+      color: var(--mid);
+      letter-spacing: .02em;
+      margin-bottom: .3rem;
+    }
+    .meta-val {
+      font-size: .98rem;
+      font-weight: 500;
+      color: var(--ink);
+      line-height: 1.5;
+    }
 
     /* ── SKILLS ── */
-    .skills-grid { display:grid; grid-template-columns:repeat(3,1fr); border:1px solid var(--line); }
-    .skill-cell {
-      padding:2rem 2rem 2.5rem; border:1px solid var(--line);
-      position:relative; overflow:hidden;
-      transition:background .25s, color .25s;
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.2rem;
     }
-    .skill-cell:hover { background:var(--ink); color:var(--bg); }
-    .skill-cell:hover .sk-lbl, .skill-cell:hover .sk-yrs { color:rgba(244,243,239,.4); }
-    .sk-name { font-family:var(--serif); font-size:1.6rem; font-style:italic; margin-bottom:.3rem; }
-    .sk-lbl { font-family:var(--mono); font-size:.56rem; letter-spacing:.08em; text-transform:uppercase; color:var(--mid); }
-    .sk-yrs { position:absolute; bottom:1.2rem; right:1.4rem; font-family:var(--mono); font-size:.52rem; color:var(--line); }
-
-    /* ASCII modular patch below skills */
-    .modular-patch {
-      font-family:var(--mono); font-size:.48rem; line-height:1.6;
-      color:var(--line); white-space:pre;
-      margin-top:3rem; text-align:center;
+    .skill-card {
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      padding: 1.8rem;
+      transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .skill-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--cyan), var(--cyan-dk));
+      opacity: 0; transition: opacity .25s ease;
+    }
+    .skill-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+      border-color: var(--line-2);
+    }
+    .skill-card:hover::before { opacity: 1; }
+    .sk-icon {
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      background: var(--cyan-lt);
+      color: var(--cyan-dk);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 1.05rem;
+      margin-bottom: 1.2rem;
+    }
+    .sk-name {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: .3rem;
+      letter-spacing: -.01em;
+    }
+    .sk-lbl {
+      font-size: .88rem;
+      color: var(--ink-soft);
+      line-height: 1.5;
+      margin-bottom: 1rem;
+    }
+    .sk-meta {
+      display: inline-block;
+      background: var(--bg-soft);
+      padding: .3rem .8rem;
+      border-radius: var(--radius-pill);
+      font-size: .75rem;
+      font-weight: 500;
+      color: var(--ink-soft);
     }
 
     /* ── EXPERIENCE ── */
-    .exp-item {
-      display:grid; grid-template-columns:150px 1fr 200px;
-      gap:2rem; align-items:start;
-      padding:2rem 0; border-bottom:1px solid var(--line);
+    .exp-list {
+      display: flex; flex-direction: column; gap: 1rem;
     }
-    .exp-date { font-family:var(--mono); font-size:.63rem; color:var(--mid); padding-top:.2rem; }
-    .exp-role { font-family:var(--serif); font-size:1.3rem; margin-bottom:.3rem; }
-    .exp-desc { font-size:.95rem; color:var(--mid); line-height:1.55; }
-    .exp-where { font-family:var(--serif); font-style:italic; color:var(--mid); font-size:1rem; text-align:right; padding-top:.2rem; }
+    .exp-item {
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      padding: 1.8rem 2rem;
+      display: grid;
+      grid-template-columns: 140px 1fr auto;
+      gap: 2rem;
+      align-items: center;
+      transition: box-shadow .2s ease, border-color .2s ease;
+    }
+    .exp-item:hover { box-shadow: var(--shadow-sm); border-color: var(--line-2); }
+    .exp-date {
+      display: inline-block;
+      background: var(--cyan-lt);
+      color: var(--cyan-dk);
+      padding: .35rem .9rem;
+      border-radius: var(--radius-pill);
+      font-size: .82rem;
+      font-weight: 600;
+      width: fit-content;
+    }
+    .exp-role {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--ink);
+      letter-spacing: -.01em;
+      margin-bottom: .3rem;
+    }
+    .exp-desc {
+      font-size: .92rem;
+      color: var(--ink-soft);
+      line-height: 1.55;
+    }
+    .exp-where {
+      font-size: .9rem;
+      font-weight: 500;
+      color: var(--ink-soft);
+      text-align: right;
+    }
 
     /* ── EDUCATION ── */
-    .edu-grid { display:grid; grid-template-columns:1fr 1fr; gap:2px; }
-    .edu-cell { padding:2.5rem; border:1px solid var(--line); }
-    .edu-cell.dark { background:var(--ink); color:var(--bg); }
-    .edu-cell.dark .edu-inst, .edu-cell.dark .edu-date { color:rgba(244,243,239,.4); }
-    .edu-deg { font-family:var(--serif); font-size:1.3rem; font-style:italic; line-height:1.3; margin-bottom:.6rem; }
-    .edu-inst { font-family:var(--mono); font-size:.6rem; letter-spacing:.08em; text-transform:uppercase; color:var(--mid); }
-    .edu-date { font-family:var(--mono); font-size:.56rem; color:var(--line); margin-top:1.2rem; }
+    .edu-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.2rem;
+    }
+    .edu-card {
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      position: relative;
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+    .edu-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
+    .edu-card.featured {
+      background: linear-gradient(135deg, var(--cyan) 0%, var(--cyan-dk) 100%);
+      color: white;
+      border-color: transparent;
+    }
+    .edu-status {
+      display: inline-block;
+      background: var(--cyan-lt);
+      color: var(--cyan-dk);
+      padding: .3rem .8rem;
+      border-radius: var(--radius-pill);
+      font-size: .72rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+    .edu-card.featured .edu-status {
+      background: rgba(255, 255, 255, .22);
+      color: white;
+    }
+    .edu-deg {
+      font-size: 1.2rem;
+      font-weight: 700;
+      line-height: 1.3;
+      margin-bottom: .6rem;
+      letter-spacing: -.01em;
+    }
+    .edu-inst {
+      font-size: .9rem;
+      color: var(--ink-soft);
+      margin-bottom: .6rem;
+    }
+    .edu-card.featured .edu-inst { color: rgba(255, 255, 255, .82); }
+    .edu-detail {
+      font-size: .85rem;
+      color: var(--mid);
+      line-height: 1.5;
+    }
+    .edu-card.featured .edu-detail { color: rgba(255, 255, 255, .72); }
 
     /* ── PROJECTS ── */
-    .proj-grid { display:grid; grid-template-columns:1fr 1fr; gap:3rem; }
-    .proj-card {
-      border:1px solid var(--line); padding:2.5rem;
-      transition:transform .25s, box-shadow .25s;
+    .proj-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
     }
-    .proj-card:hover { transform:translate(-4px,-4px); box-shadow:4px 4px 0 var(--ink); }
-    .proj-tag { font-family:var(--mono); font-size:.56rem; letter-spacing:.1em; text-transform:uppercase; color:var(--mid); margin-bottom:1rem; }
-    .proj-title { font-family:var(--serif); font-size:1.6rem; font-style:italic; margin-bottom:.8rem; }
-    .proj-body { font-size:.95rem; color:var(--mid); line-height:1.6; }
+    .proj-card {
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      transition: transform .25s ease, box-shadow .25s ease;
+      display: flex; flex-direction: column; gap: 1rem;
+      min-height: 220px;
+    }
+    .proj-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+    .proj-card.placeholder {
+      border-style: dashed;
+      border-color: var(--line-2);
+      align-items: center; justify-content: center;
+      text-align: center;
+      background: var(--bg-soft);
+    }
+    .proj-card.placeholder:hover { transform: none; box-shadow: none; }
+    .proj-tag {
+      display: inline-block;
+      background: var(--cyan-lt);
+      color: var(--cyan-dk);
+      padding: .3rem .8rem;
+      border-radius: var(--radius-pill);
+      font-size: .72rem;
+      font-weight: 600;
+      width: fit-content;
+    }
+    .proj-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--ink);
+      letter-spacing: -.01em;
+    }
+    .proj-body {
+      font-size: .92rem;
+      color: var(--ink-soft);
+      line-height: 1.6;
+    }
+    .proj-link {
+      color: var(--cyan-dk);
+      font-weight: 600; font-size: .9rem;
+      display: inline-flex; align-items: center; gap: .4rem;
+      margin-top: auto;
+    }
+    .proj-link:hover { color: var(--cyan); }
 
     /* ── CONTACT ── */
-    #contact { display:grid; grid-template-columns:1fr 1fr; gap:5rem; align-items:center; }
-    .contact-title { font-family:var(--serif); font-weight:400; font-size:clamp(2.2rem,5vw,4rem); line-height:1.05; }
-    .contact-title em { font-style:italic; color:var(--mid); }
-    .contact-links { display:flex; flex-direction:column; }
-    .c-link {
-      display:flex; justify-content:space-between; align-items:center;
-      padding:1.3rem 0; border-bottom:1px solid var(--line);
-      text-decoration:none; color:var(--ink);
-      font-family:var(--serif); font-size:1.1rem; transition:color .2s;
+    #contact {
+      padding-top: 4rem; padding-bottom: 4rem;
     }
-    .c-link:hover { color:var(--accent); }
-    .c-arrow { font-family:var(--mono); font-size:.85rem; transition:transform .2s; }
-    .c-link:hover .c-arrow { transform:translate(3px,-3px); }
+    .contact-wrap {
+      background: linear-gradient(135deg, var(--cyan) 0%, var(--cyan-dk) 100%);
+      border-radius: var(--radius-lg);
+      padding: 4rem;
+      color: white;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .contact-wrap::before {
+      content: '';
+      position: absolute;
+      top: -50%; right: -10%;
+      width: 500px; height: 500px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, .08);
+      pointer-events: none;
+    }
+    .contact-wrap::after {
+      content: '';
+      position: absolute;
+      bottom: -40%; left: -10%;
+      width: 400px; height: 400px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, .06);
+      pointer-events: none;
+    }
+    .contact-content { position: relative; z-index: 2; }
+    .contact-title {
+      font-size: clamp(2rem, 3.6vw, 2.8rem);
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -.02em;
+      margin-bottom: 1rem;
+    }
+    .contact-desc {
+      font-size: 1.05rem;
+      color: rgba(255, 255, 255, .85);
+      line-height: 1.6;
+    }
+    .contact-links {
+      position: relative; z-index: 2;
+      display: flex; flex-direction: column; gap: .8rem;
+    }
+    .c-link {
+      display: flex; justify-content: space-between; align-items: center;
+      background: rgba(255, 255, 255, .12);
+      backdrop-filter: blur(6px);
+      border: 1px solid rgba(255, 255, 255, .18);
+      padding: 1.1rem 1.5rem;
+      border-radius: var(--radius-pill);
+      color: white;
+      font-weight: 500; font-size: .95rem;
+      transition: background .2s, transform .15s;
+    }
+    .c-link:hover { background: rgba(255, 255, 255, .22); transform: translateX(4px); }
+    .c-arrow { font-size: 1.1rem; }
 
     /* ── FOOTER ── */
     footer {
-      border-top:1px solid var(--line);
-      padding:1.8rem 3rem;
-      display:flex; justify-content:space-between; align-items:center;
-      background:var(--bg);
+      border-top: 1px solid var(--line);
+      padding: 2rem 2.5rem;
+      max-width: 1280px; margin: 0 auto;
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 1rem;
     }
-    footer p { font-family:var(--mono); font-size:.58rem; color:var(--mid); letter-spacing:.06em; }
-    .foot-r { font-family:var(--mono); font-size:.5rem; color:var(--line); white-space:pre; line-height:1.5; text-align:right; }
+    footer p {
+      font-size: .85rem; color: var(--mid);
+    }
+    .foot-links {
+      display: flex; gap: 1.5rem;
+    }
+    .foot-links a {
+      font-size: .85rem; color: var(--ink-soft);
+      transition: color .2s;
+    }
+    .foot-links a:hover { color: var(--cyan); }
 
     /* ── SCROLL REVEAL ── */
-    .reveal { opacity:0; transform:translateY(16px); transition:opacity .65s ease, transform .65s ease; }
-    .reveal.in { opacity:1; transform:none; }
+    .reveal { opacity: 0; transform: translateY(20px); transition: opacity .6s ease, transform .6s ease; }
+    .reveal.in { opacity: 1; transform: none; }
 
     /* ── RESPONSIVE ── */
-    @media (max-width:900px) {
-      nav { padding:1rem 1.5rem; }
-      section:not(#hero) { padding:4rem 1.5rem; }
-      #hero { padding:5rem 1.5rem 2.5rem; }
-      .about-grid, .edu-grid, .proj-grid, #contact { grid-template-columns:1fr; }
-      .skills-grid { grid-template-columns:1fr 1fr; }
-      .exp-item { grid-template-columns:1fr; gap:.4rem; }
-      .exp-where { text-align:left; }
-      .hero-ascii { display:none; }
-      .scroll-hint { display:none; }
-      /* params: tuck into corner without overlap */
-      #lorenz-params { right:1.5rem; bottom:1rem; font-size:.44rem; }
-      /* sound toggle reposition */
-      #sound-toggle { top:4.2rem; left:1.5rem; }
+    @media (max-width: 960px) {
+      nav { padding: .85rem 1.25rem; }
+      nav ul { gap: 1rem; }
+      .nav-hide { display: none; }
+      #hero { padding: 7rem 1.25rem 3.5rem; min-height: auto; }
+      .hero-container { grid-template-columns: 1fr; gap: 2.5rem; }
+      .hero-visual { max-width: 320px; margin: 0 auto; }
+      section:not(#hero) { padding: 4rem 1.25rem; }
+      .about-grid, .edu-grid, .proj-grid { grid-template-columns: 1fr; }
+      .skills-grid { grid-template-columns: repeat(2, 1fr); }
+      .exp-item { grid-template-columns: 1fr; gap: .8rem; }
+      .exp-where { text-align: left; }
+      .contact-wrap { grid-template-columns: 1fr; padding: 2.5rem; gap: 2rem; }
     }
-    @media (max-width:560px) {
-      .skills-grid { grid-template-columns:1fr; }
-      .nav-hide { display:none; }
-      /* hide mouse hint on touch — no hover gesture */
-      #mouse-hint { display:none; }
-      /* hero name slightly tighter */
-      .hero-name { font-size:clamp(1.8rem, 8vw, 2.8rem); }
-    }
-    /* touch-only devices: restore default cursor everywhere */
-    @media (hover: none) {
-      body { cursor:auto; }
+    @media (max-width: 560px) {
+      .skills-grid { grid-template-columns: 1fr; }
+      .hero-cta-row { flex-direction: column; align-items: stretch; }
+      .btn { justify-content: center; }
+      footer { flex-direction: column; text-align: center; }
     }
   </style>
 </head>
@@ -325,108 +577,139 @@
 
   <!-- NAV -->
   <nav>
-    <a href="index.html" class="logo">AGS —</a>
+    <a href="index.html" class="logo">
+      <span class="logo-dot">A</span>
+      <span>Alejandro García Soto</span>
+    </a>
     <ul>
-      <li><a href="#about" class="nav-hide">Sobre mí</a></li>
-      <li><a href="#skills" class="nav-hide">Skills</a></li>
-      <li><a href="#experience" class="nav-hide">Experiencia</a></li>
-      <li><a href="#education" class="nav-hide">Formación</a></li>
-      <li><a href="#projects" class="nav-hide">Proyectos</a></li>
-      <li><a href="works.html" class="nav-works">Works ↗</a></li>
-      <li><a href="#contact">Contacto</a></li>
+      <li><a href="#about" class="nav-link nav-hide">Sobre mí</a></li>
+      <li><a href="#skills" class="nav-link nav-hide">Skills</a></li>
+      <li><a href="#experience" class="nav-link nav-hide">Experiencia</a></li>
+      <li><a href="#projects" class="nav-link nav-hide">Proyectos</a></li>
+      <li><a href="works.html" class="nav-link">Works</a></li>
+      <li><a href="#contact" class="nav-cta">Contacto</a></li>
     </ul>
   </nav>
 
   <!-- HERO -->
   <section id="hero">
-    <canvas id="lorenz"></canvas>
-    <div id="hero-img"></div>
+    <div class="hero-container">
+      <div class="hero-text">
+        <div class="hero-pill">Disponible para proyectos · Madrid</div>
+        <h1 class="hero-name">
+          Diseño sonoro,<br>
+          <span>producción musical</span><br>
+          e IA aplicada al audio.
+        </h1>
+        <p class="hero-sub">
+          Técnico Superior de Sonido con más de seis años de experiencia. Construyo experiencias sonoras que cruzan disciplinas: teatro, videojuegos, síntesis generativa y experimentación con inteligencia artificial.
+        </p>
+        <div class="hero-tags">
+          <span class="hero-tag">Diseño de Sonido</span>
+          <span class="hero-tag">Producción Musical</span>
+          <span class="hero-tag">Inteligencia Artificial</span>
+          <span class="hero-tag">Videojuegos</span>
+          <span class="hero-tag">Pure Data</span>
+        </div>
+        <div class="hero-cta-row">
+          <a href="#contact" class="btn btn-primary">
+            Hablemos
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+          <a href="works.html" class="btn btn-ghost">Ver trabajos</a>
+        </div>
+      </div>
 
-    <!-- Sound toggle -->
-    <button id="sound-toggle" title="activar / silenciar sonido">♪</button>
+      <div class="hero-visual">
+        <!-- Abstract cyan composition: concentric rings + waveform -->
+        <svg viewBox="0 0 520 520" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#00a2e8"/>
+              <stop offset="100%" stop-color="#0080c4"/>
+            </linearGradient>
+            <radialGradient id="coreGrad" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#00a2e8" stop-opacity="1"/>
+              <stop offset="100%" stop-color="#00a2e8" stop-opacity=".4"/>
+            </radialGradient>
+          </defs>
 
-    <!-- ASCII corner -->
-    <div class="hero-ascii">╔══════[FIBONACCI SPHERE]══════╗
-║  N=130  φ=(1+√5)/2           ║
-║  θᵢ = φ·i  (golden angle)    ║
-║  yᵢ = 1 − 2i/(N−1)          ║
-║  r  = √(1 − y²)             ║
-║  geodesic wireframe mesh     ║
-╚══════════════════════════════╝
+          <!-- soft background disc -->
+          <circle cx="260" cy="260" r="240" fill="#e6f5fc"/>
 
-  [osc~ 55] → [lop~ 900]
-       |             |
-   [detuned]    [reverb~]
-       |             |
-   [beating]    [dac~]
-       |
-   [pentatonic] → [melody]
+          <!-- concentric rings (pulsing) -->
+          <circle cx="260" cy="260" r="200" fill="none" stroke="#cfe3f0" stroke-width="1">
+            <animate attributeName="r" values="200;210;200" dur="6s" repeatCount="indefinite"/>
+          </circle>
+          <circle cx="260" cy="260" r="160" fill="none" stroke="#cfe3f0" stroke-width="1.5">
+            <animate attributeName="r" values="160;168;160" dur="5s" repeatCount="indefinite"/>
+          </circle>
+          <circle cx="260" cy="260" r="120" fill="none" stroke="#00a2e8" stroke-width="2" stroke-opacity=".35">
+            <animate attributeName="r" values="120;126;120" dur="4s" repeatCount="indefinite"/>
+          </circle>
+          <circle cx="260" cy="260" r="80" fill="none" stroke="url(#ringGrad)" stroke-width="2.5" stroke-opacity=".7">
+            <animate attributeName="r" values="80;84;80" dur="3s" repeatCount="indefinite"/>
+          </circle>
 
-  ∿∿∿ ♩ ♪ ♫ ♬ ∿∿∿</div>
+          <!-- core sphere -->
+          <circle cx="260" cy="260" r="42" fill="url(#coreGrad)">
+            <animate attributeName="r" values="42;46;42" dur="2.2s" repeatCount="indefinite"/>
+          </circle>
+          <circle cx="260" cy="260" r="18" fill="white" fill-opacity=".9"/>
 
-    <div class="hero-bottom">
-      <div class="hero-eyebrow">portfolio — madrid 2025</div>
-      <h1 class="hero-name">
-        Alejandro <em>García</em> Soto
-      </h1>
-      <div class="hero-tags">
-        <span class="hero-tag">Diseño de Sonido</span>
-        <span class="hero-tag">Producción Musical</span>
-        <span class="hero-tag">Inteligencia Artificial</span>
-        <span class="hero-tag">Videojuegos</span>
-        <span class="hero-tag">Pure Data</span>
-        <span class="hero-tag">Madrid</span>
+          <!-- waveform bars across the middle -->
+          <g fill="#00a2e8" opacity=".75">
+            <rect x="30"  y="252" width="5" height="16" rx="2.5"><animate attributeName="height" values="16;32;16" dur="1.4s" repeatCount="indefinite"/><animate attributeName="y" values="252;244;252" dur="1.4s" repeatCount="indefinite"/></rect>
+            <rect x="55"  y="246" width="5" height="28" rx="2.5"><animate attributeName="height" values="28;14;28" dur="1.2s" repeatCount="indefinite"/><animate attributeName="y" values="246;253;246" dur="1.2s" repeatCount="indefinite"/></rect>
+            <rect x="80"  y="240" width="5" height="40" rx="2.5"><animate attributeName="height" values="40;22;40" dur="1.6s" repeatCount="indefinite"/><animate attributeName="y" values="240;249;240" dur="1.6s" repeatCount="indefinite"/></rect>
+            <rect x="105" y="250" width="5" height="20" rx="2.5"><animate attributeName="height" values="20;36;20" dur="1.3s" repeatCount="indefinite"/><animate attributeName="y" values="250;242;250" dur="1.3s" repeatCount="indefinite"/></rect>
+            <rect x="130" y="244" width="5" height="32" rx="2.5"><animate attributeName="height" values="32;16;32" dur="1.5s" repeatCount="indefinite"/><animate attributeName="y" values="244;252;244" dur="1.5s" repeatCount="indefinite"/></rect>
+
+            <rect x="385" y="244" width="5" height="32" rx="2.5"><animate attributeName="height" values="32;16;32" dur="1.5s" repeatCount="indefinite"/><animate attributeName="y" values="244;252;244" dur="1.5s" repeatCount="indefinite"/></rect>
+            <rect x="410" y="250" width="5" height="20" rx="2.5"><animate attributeName="height" values="20;36;20" dur="1.3s" repeatCount="indefinite"/><animate attributeName="y" values="250;242;250" dur="1.3s" repeatCount="indefinite"/></rect>
+            <rect x="435" y="240" width="5" height="40" rx="2.5"><animate attributeName="height" values="40;22;40" dur="1.6s" repeatCount="indefinite"/><animate attributeName="y" values="240;249;240" dur="1.6s" repeatCount="indefinite"/></rect>
+            <rect x="460" y="246" width="5" height="28" rx="2.5"><animate attributeName="height" values="28;14;28" dur="1.2s" repeatCount="indefinite"/><animate attributeName="y" values="246;253;246" dur="1.2s" repeatCount="indefinite"/></rect>
+            <rect x="485" y="252" width="5" height="16" rx="2.5"><animate attributeName="height" values="16;32;16" dur="1.4s" repeatCount="indefinite"/><animate attributeName="y" values="252;244;252" dur="1.4s" repeatCount="indefinite"/></rect>
+          </g>
+
+          <!-- orbiting dots -->
+          <g>
+            <circle cx="260" cy="120" r="6" fill="#00a2e8">
+              <animateTransform attributeName="transform" type="rotate" from="0 260 260" to="360 260 260" dur="18s" repeatCount="indefinite"/>
+            </circle>
+            <circle cx="380" cy="260" r="4" fill="#0080c4">
+              <animateTransform attributeName="transform" type="rotate" from="0 260 260" to="-360 260 260" dur="22s" repeatCount="indefinite"/>
+            </circle>
+            <circle cx="260" cy="420" r="5" fill="#00a2e8" fill-opacity=".7">
+              <animateTransform attributeName="transform" type="rotate" from="0 260 260" to="360 260 260" dur="14s" repeatCount="indefinite"/>
+            </circle>
+          </g>
+        </svg>
       </div>
     </div>
-
-    <!-- Live parameter readout -->
-    <div id="lorenz-params">130pts · — · ry=0.00</div>
-
-    <!-- Mouse interaction hint -->
-    <div id="mouse-hint">
-      <pre>
-  ╔══════════════════════╗
-  ║  mueve el ratón      ║
-  ║  ← → rotación        ║
-  ║  rápido → melodía    ║
-  ╚══════════════════════╝</pre>
-    </div>
-
-    <div class="scroll-hint">scroll ↓</div>
   </section>
 
   <!-- ABOUT -->
   <section id="about">
     <div class="sec-head reveal">
-      <span class="sec-num">01 /</span>
-      <h2 class="sec-title">Sobre mí</h2>
+      <div class="sec-eyebrow">01 — Sobre mí</div>
+      <h2 class="sec-title">Música y <span>tecnología</span>.</h2>
+      <p class="sec-lead">Formación musical clásica, producción contemporánea y una curiosidad persistente por los sistemas que generan sonido.</p>
     </div>
     <div class="about-grid">
       <div class="about-text reveal">
         <p>
-          Técnico Superior de Sonido con más de seis años de experiencia en producción y diseño sonoro. Mi trabajo cruza disciplinas: desde la sala de teatro hasta el estudio de videojuegos, pasando por síntesis generativa en Pure Data y experimentación con inteligencia artificial aplicada al audio.
+          <strong>Técnico Superior de Sonido</strong> con más de seis años de experiencia en producción y diseño sonoro. Mi trabajo cruza disciplinas: desde la sala de teatro hasta el estudio de videojuegos, pasando por síntesis generativa en Pure Data y experimentación con inteligencia artificial aplicada al audio.
         </p>
         <p>
           Empecé con el violín —ocho años, nivel grado medio— antes de encontrar en el software un nuevo instrumento. Composición, solfeo, informática musical: la teoría siempre ha estado debajo de la práctica. Hoy construyo experiencias sonoras que no caben en una sola categoría.
         </p>
         <p>
-          Actualmente cursando un Máster en Música para Videojuegos y el Programa Superior en Inteligencia Artificial.
+          Actualmente cursando un <strong>Máster en Música para Videojuegos</strong> y el <strong>Programa Superior en Inteligencia Artificial</strong>.
         </p>
-        <div class="pd-patch">
-[adc~]                ← input from mic/instrument
-    |
-[env~ 2048]           ← amplitude follower
-    |        \
-[mtof]     [outlet~]  ← pitch tracking
-    |
-[osc~]                ← resynthesis oscillator
-    |        |
-[hip~ 60] [lop~ 12k]  ← hi/lo pass filters
-         |
-       [dac~]         ← output</div>
       </div>
 
-      <div class="meta-stack reveal">
+      <div class="meta-card reveal">
         <div class="meta-row">
           <div class="meta-lbl">Ubicación</div>
           <div class="meta-val">Madrid, España</div>
@@ -437,7 +720,7 @@
         </div>
         <div class="meta-row">
           <div class="meta-lbl">Email</div>
-          <div class="meta-val" style="font-size:.88rem">ofcanadaboards@gmail.com</div>
+          <div class="meta-val" style="font-size:.9rem">ofcanadaboards@gmail.com</div>
         </div>
         <div class="meta-row">
           <div class="meta-lbl">Teléfono</div>
@@ -454,105 +737,112 @@
   <!-- SKILLS -->
   <section id="skills">
     <div class="sec-head reveal">
-      <span class="sec-num">02 /</span>
-      <h2 class="sec-title">Tecnologías</h2>
+      <div class="sec-eyebrow">02 — Tecnologías</div>
+      <h2 class="sec-title">Herramientas que <span>uso a diario</span>.</h2>
+      <p class="sec-lead">DAWs, síntesis, código y hardware. El stack completo para mover un proyecto de audio desde la idea hasta la implementación.</p>
     </div>
     <div class="skills-grid reveal">
-      <div class="skill-cell">
+      <div class="skill-card">
+        <div class="sk-icon">Ab</div>
         <div class="sk-name">Ableton Live</div>
         <div class="sk-lbl">DAW · Producción · Live Performance</div>
-        <div class="sk-yrs">6 años</div>
+        <span class="sk-meta">6 años</span>
       </div>
-      <div class="skill-cell">
+      <div class="skill-card">
+        <div class="sk-icon">Pt</div>
         <div class="sk-name">Pro Tools</div>
         <div class="sk-lbl">Grabación · Post-producción · Edición</div>
+        <span class="sk-meta">Profesional</span>
       </div>
-      <div class="skill-cell">
+      <div class="skill-card">
+        <div class="sk-icon">Pd</div>
         <div class="sk-name">Pure Data</div>
         <div class="sk-lbl">Síntesis · Audio generativo · DSP</div>
+        <span class="sk-meta">Avanzado</span>
       </div>
-      <div class="skill-cell">
+      <div class="skill-card">
+        <div class="sk-icon">Py</div>
         <div class="sk-name">Python</div>
         <div class="sk-lbl">Scripting · Processing · Audio analysis</div>
+        <span class="sk-meta">Intermedio</span>
       </div>
-      <div class="skill-cell">
+      <div class="skill-card">
+        <div class="sk-icon">Ar</div>
         <div class="sk-name">Arduino</div>
         <div class="sk-lbl">Hardware · Instalaciones interactivas</div>
+        <span class="sk-meta">Intermedio</span>
       </div>
-      <div class="skill-cell">
+      <div class="skill-card">
+        <div class="sk-icon">AI</div>
         <div class="sk-name">IA & Claude</div>
         <div class="sk-lbl">Generative AI · Prompt engineering</div>
+        <span class="sk-meta">Activo</span>
       </div>
     </div>
-
-    <div class="modular-patch">
-╔═[OSC1]═══[OSC2]═══[NOISE]═══════════════════╗
-║  SAW       SQU      WHITE                    ║
-║   │         │         │                      ║
-╠═[MIX]═══════╧═════════╝                      ║
-║   │                                          ║
-║  [FILTER]  CUTOFF ◯  RESO ◯  ENV ◯           ║
-║   │                                          ║
-║  [AMP]  ──── ENV ────▶  A  D  S  R           ║
-║   │                                          ║
-║  [FX]   reverb · delay · distortion          ║
-║   │                                          ║
-╚══[OUT]═══════════════════════════════════════╝
-    LFO → PITCH · FILTER · AMP</div>
   </section>
 
   <!-- EXPERIENCE -->
   <section id="experience">
     <div class="sec-head reveal">
-      <span class="sec-num">03 /</span>
-      <h2 class="sec-title">Experiencia</h2>
+      <div class="sec-eyebrow">03 — Experiencia</div>
+      <h2 class="sec-title">Trabajos <span>recientes</span>.</h2>
     </div>
 
-    <div class="exp-item reveal">
-      <div class="exp-date">2025</div>
-      <div>
-        <div class="exp-role">DJ Residente</div>
-        <div class="exp-desc">Diseño de ambientes sonoros y selecciones musicales en directo para el espacio gastronómico.</div>
+    <div class="exp-list reveal">
+      <div class="exp-item">
+        <span class="exp-date">2025</span>
+        <div>
+          <div class="exp-role">DJ Residente</div>
+          <div class="exp-desc">Diseño de ambientes sonoros y selecciones musicales en directo para el espacio gastronómico.</div>
+        </div>
+        <div class="exp-where">Restaurante Entreaguas</div>
       </div>
-      <div class="exp-where">Restaurante Entreaguas</div>
-    </div>
 
-    <div class="exp-item reveal">
-      <div class="exp-date">2024–2025</div>
-      <div>
-        <div class="exp-role">Técnico de Sonido</div>
-        <div class="exp-desc">Montaje y control de equipos de sonido, escenografía y colaboración técnica en eventos en directo.</div>
+      <div class="exp-item">
+        <span class="exp-date">2024 – 2025</span>
+        <div>
+          <div class="exp-role">Técnico de Sonido</div>
+          <div class="exp-desc">Montaje y control de equipos de sonido, escenografía y colaboración técnica en eventos en directo.</div>
+        </div>
+        <div class="exp-where">Teatro Palenque &amp; Victoria</div>
       </div>
-      <div class="exp-where">Teatro Palenque &amp; Victoria</div>
     </div>
   </section>
 
   <!-- EDUCATION -->
   <section id="education">
     <div class="sec-head reveal">
-      <span class="sec-num">04 /</span>
-      <h2 class="sec-title">Formación</h2>
+      <div class="sec-eyebrow">04 — Formación</div>
+      <h2 class="sec-title">Estudios y <span>aprendizaje</span>.</h2>
     </div>
+
     <div class="edu-grid">
-      <div class="edu-cell dark reveal">
+      <div class="edu-card featured reveal">
+        <span class="edu-status">En curso</span>
         <div class="edu-deg">Máster en Música para Videojuegos</div>
-        <div class="edu-inst">En curso · 2025 → actualidad</div>
-        <div class="edu-date">Composición interactiva · Audio adaptativo · Implementación</div>
+        <div class="edu-inst">2025 → actualidad</div>
+        <div class="edu-detail">Composición interactiva · Audio adaptativo · Implementación</div>
       </div>
-      <div class="edu-cell reveal">
+
+      <div class="edu-card reveal">
+        <span class="edu-status">Titulado</span>
         <div class="edu-deg">Técnico Superior de Sonido</div>
-        <div class="edu-inst">Alfonso X el Sabio</div>
-        <div class="edu-date">2022 → 2024</div>
+        <div class="edu-inst">Alfonso X el Sabio · 2022 → 2024</div>
+        <div class="edu-detail">Grabación · Mezcla · Post-producción · Directo</div>
       </div>
-      <div class="edu-cell reveal">
+
+      <div class="edu-card reveal">
+        <span class="edu-status">En curso</span>
         <div class="edu-deg">Programa Superior en Inteligencia Artificial</div>
-        <div class="edu-inst">En curso · 2025 → actualidad</div>
-        <div class="edu-date">Machine learning · Modelos generativos · Aplicaciones de IA</div>
+        <div class="edu-inst">2025 → actualidad</div>
+        <div class="edu-detail">Machine learning · Modelos generativos · Aplicaciones de IA</div>
       </div>
-      <div class="edu-cell reveal">
+
+      <div class="edu-card reveal">
+        <span class="edu-status">Formación continua</span>
         <div class="edu-deg">Violín · Composición · Solfeo · Informática Musical</div>
         <div class="edu-inst">Formación musical integral</div>
-        <div class="edu-date">8 años violín — nivel grado medio</div>
+        <div class="edu-detail">8 años de violín — nivel grado medio</div>
       </div>
     </div>
   </section>
@@ -560,388 +850,74 @@
   <!-- PROJECTS -->
   <section id="projects">
     <div class="sec-head reveal">
-      <span class="sec-num">05 /</span>
-      <h2 class="sec-title">Proyectos</h2>
+      <div class="sec-eyebrow">05 — Proyectos</div>
+      <h2 class="sec-title">Qué estoy <span>construyendo</span>.</h2>
     </div>
+
     <div class="proj-grid">
       <div class="proj-card reveal">
-        <div class="proj-tag">TFG · Plan de Empresa · 2024</div>
+        <span class="proj-tag">TFG · Plan de Empresa · 2024</span>
         <div class="proj-title">Distribución Musical Independiente</div>
         <div class="proj-body">Proyecto de empresa en el sector de la distribución musical y representación en espectáculos. Análisis DAFO, plan de marketing, estructura financiera y selección de personal para una empresa de producción sonora.</div>
+        <a href="works.html" class="proj-link">Ver detalles →</a>
       </div>
-      <div class="proj-card reveal" style="border-style:dashed; display:flex; align-items:center; justify-content:center; min-height:220px; text-align:center;">
-        <div>
-          <div class="proj-tag" style="margin-bottom:.8rem">Próximamente</div>
-          <pre style="font-family:var(--mono); font-size:.48rem; color:var(--line); line-height:1.5">
-  ░  ░  ░  ░  ░
-  ░ [en progreso] ░
-  ░  ░  ░  ░  ░
-          </pre>
-        </div>
+
+      <div class="proj-card placeholder reveal">
+        <span class="proj-tag">Próximamente</span>
+        <div class="proj-title" style="color: var(--ink-soft)">En progreso</div>
+        <div class="proj-body">Nuevos proyectos de audio generativo e integración con IA en camino.</div>
       </div>
     </div>
   </section>
 
   <!-- CONTACT -->
   <section id="contact">
-    <div class="contact-title reveal">
-      ¿Hablamos<br>de <em>sonido</em>?
-    </div>
-    <div class="contact-links reveal">
-      <a href="mailto:ofcanadaboards@gmail.com" class="c-link">
-        <span>ofcanadaboards@gmail.com</span>
-        <span class="c-arrow">↗</span>
-      </a>
-      <a href="tel:+34649466511" class="c-link">
-        <span>+34 649 466 511</span>
-        <span class="c-arrow">↗</span>
-      </a>
-      <a href="works.html" class="c-link">
-        <span>Ver trabajos</span>
-        <span class="c-arrow">↗</span>
-      </a>
+    <div class="contact-wrap reveal">
+      <div class="contact-content">
+        <div class="contact-title">¿Hablamos de sonido?</div>
+        <div class="contact-desc">Disponible para colaboraciones, proyectos de diseño sonoro, audio para videojuegos y experimentación con IA. Escríbeme — respondo rápido.</div>
+      </div>
+      <div class="contact-links">
+        <a href="mailto:ofcanadaboards@gmail.com" class="c-link">
+          <span>ofcanadaboards@gmail.com</span>
+          <span class="c-arrow">→</span>
+        </a>
+        <a href="tel:+34649466511" class="c-link">
+          <span>+34 649 466 511</span>
+          <span class="c-arrow">→</span>
+        </a>
+        <a href="works.html" class="c-link">
+          <span>Ver trabajos</span>
+          <span class="c-arrow">→</span>
+        </a>
+      </div>
     </div>
   </section>
 
   <!-- FOOTER -->
   <footer>
-    <p>Alejandro García Soto © 2025 — Madrid</p>
-    <pre class="foot-r">N=130 · φ=(1+√5)/2 · geodesic mesh
-♩ ♪ ♫ ♬  ∿∿∿∿∿∿∿∿∿∿∿</pre>
+    <p>© 2025 Alejandro García Soto — Madrid</p>
+    <div class="foot-links">
+      <a href="#about">Sobre mí</a>
+      <a href="#skills">Skills</a>
+      <a href="works.html">Works</a>
+      <a href="#contact">Contacto</a>
+    </div>
   </footer>
 
   <script>
-    // ── 3D FIBONACCI SPHERE + REACTIVE SOUND ─────────────────────
-    const cvs      = document.getElementById('lorenz');
-    const ctx      = cvs.getContext('2d');
-    const DPR      = window.devicePixelRatio || 1;
-    const hero     = document.getElementById('hero');
-    const paramsEl = document.getElementById('lorenz-params');
-    const hintEl   = document.getElementById('mouse-hint');
-
-    // ── Canvas sizing (DPR-aware, CSS-pixel coord system) ────────
-    function setCanvasSize() {
-      const W = hero.offsetWidth, H = hero.offsetHeight;
-      cvs.width  = W * DPR; cvs.height = H * DPR;
-      cvs.style.width  = W + 'px'; cvs.style.height = H + 'px';
-      ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
-    }
-    setCanvasSize();
-
-    const cW = () => hero.offsetWidth;
-    const cH = () => hero.offsetHeight;
-    const cX = () => cW() * 0.5;
-    const cY = () => cH() * 0.42;
-    const BR = () => Math.min(cW(), cH()) * 0.27;
-
-    // ── FIBONACCI SPHERE ─────────────────────────────────────────
-    const N_PTS  = 130;
-    const GOLDEN = Math.PI * (3 - Math.sqrt(5));
-    const pts = Array.from({length: N_PTS}, (_, i) => {
-      const y  = 1 - (i / (N_PTS - 1)) * 2;
-      const r  = Math.sqrt(Math.max(0, 1 - y*y));
-      const th = GOLDEN * i;
-      return {
-        ox: r * Math.cos(th),
-        oy: y,
-        oz: r * Math.sin(th),
-        ph: (i / N_PTS) * Math.PI * 9.1,
-        fr: 0.22 + (i / N_PTS) * 1.5,
-        sz: 0.85 + Math.random() * 0.55
-      };
-    });
-
-    // Pre-compute edges (geodesic connections between nearby surface points)
-    const EDGE_D = 0.50;
-    const edges  = [];
-    for (let i = 0; i < N_PTS; i++) {
-      for (let j = i+1; j < N_PTS; j++) {
-        const dx = pts[i].ox - pts[j].ox;
-        const dy = pts[i].oy - pts[j].oy;
-        const dz = pts[i].oz - pts[j].oz;
-        if (dx*dx + dy*dy + dz*dz < EDGE_D*EDGE_D) edges.push([i, j]);
-      }
-    }
-
-    // ── 3D HELPERS ───────────────────────────────────────────────
-    function rotate(x, y, z, rx, ry) {
-      const cy = Math.cos(ry), sy = Math.sin(ry);
-      const x1 = x*cy + z*sy, z1 = -x*sy + z*cy;
-      const cx = Math.cos(rx), sx = Math.sin(rx);
-      return [x1, y*cx - z1*sx, y*sx + z1*cx];
-    }
-
-    function project(x, y, z) {
-      const fov = 460, sc = fov / (fov + z + BR()*1.25);
-      return [cX() + x*sc, cY() + y*sc, sc, z];
-    }
-
-    // ── STATE ────────────────────────────────────────────────────
-    let rotX = 0.18, rotY = 0;
-    let targetRX = 0.18, targetRY = 0;
-    let mX = 0.5,  mY = 0.5;
-    let pmX = 0.5, pmY = 0.5;
-    let mouseSpd   = 0;
-    let cursorX    = -999, cursorY = -999;
-    let inHero     = false;
-    let spin       = 0.004;
-    let T          = 0;
-    let soundOn    = true;
-    let hintHidden = false;
-
-    // ── WEB AUDIO ────────────────────────────────────────────────
-    let AC = null, masterGain = null, globalFilt = null;
-    let analyser = null, analyserData = null;
-    let lastNoteMs = 0;
-    const NOTE_GAP = 110;
-
-    // A minor pentatonic — A C D E G, three octaves
-    const SCALE_HZ = [
-      110.00, 130.81, 146.83, 164.81, 196.00,
-      220.00, 261.63, 293.66, 329.63, 392.00,
-      440.00, 523.25, 587.33, 659.25, 784.00, 880.00
-    ];
-
-    // Detuned pairs → natural amplitude beating (alive without being annoying)
-    const DRONES = [
-      [55.00, 55.18, 'sine',     0.10],
-      [82.41, 82.56, 'sine',     0.07],
-      [110.0, 110.2, 'triangle', 0.06],
-      [164.8, 165.1, 'triangle', 0.04],
-      [220.0, 220.3, 'triangle', 0.03]
-    ];
-
-    function initAudio() {
-      if (AC) return;
-      AC = new (window.AudioContext || window.webkitAudioContext)();
-
-      masterGain = AC.createGain();
-      masterGain.gain.value = 0.0001;
-      masterGain.connect(AC.destination);
-
-      globalFilt = AC.createBiquadFilter();
-      globalFilt.type = 'lowpass';
-      globalFilt.frequency.value = 900;
-      globalFilt.Q.value = 1.8;
-      globalFilt.connect(masterGain);
-
-      // Delay-based reverb
-      const dly = AC.createDelay(2.5); dly.delayTime.value = 0.42;
-      const fb  = AC.createGain();     fb.gain.value  = 0.38;
-      const wet = AC.createGain();     wet.gain.value = 0.42;
-      dly.connect(fb); fb.connect(dly);
-      dly.connect(wet); wet.connect(masterGain);
-      globalFilt.connect(dly);
-
-      analyser = AC.createAnalyser();
-      analyser.fftSize = 256;
-      analyser.smoothingTimeConstant = 0.85;
-      masterGain.connect(analyser);
-      analyserData = new Uint8Array(analyser.frequencyBinCount);
-
-      // Ambient drones — slow fade in (2.8s)
-      DRONES.forEach(([f1, f2, type, vol]) => {
-        [f1, f2].forEach(freq => {
-          const osc = AC.createOscillator();
-          const g   = AC.createGain();
-          osc.type = type; osc.frequency.value = freq;
-          osc.connect(g); g.connect(globalFilt);
-          g.gain.setValueAtTime(0.0001, AC.currentTime);
-          g.gain.setTargetAtTime(soundOn ? vol * 0.5 : 0.0001, AC.currentTime, 2.8);
-          osc.start();
-        });
-      });
-
-      masterGain.gain.setTargetAtTime(soundOn ? 0.18 : 0.0001, AC.currentTime, 2.0);
-    }
-
-    function playNote(freq, vel) {
-      if (!AC || !soundOn) return;
-      if (Date.now() - lastNoteMs < NOTE_GAP) return;
-      lastNoteMs = Date.now();
-
-      const osc = AC.createOscillator();
-      const env = AC.createGain();
-      osc.type = 'triangle';
-      osc.frequency.value = freq;
-      osc.detune.value = (Math.random() - 0.5) * 14;
-
-      const atk  = 0.006;
-      const dcy  = 0.10 + Math.random() * 0.20;
-      const peak = 0.10 * Math.min(2, vel);
-      env.gain.setValueAtTime(0.0001, AC.currentTime);
-      env.gain.linearRampToValueAtTime(peak, AC.currentTime + atk);
-      env.gain.exponentialRampToValueAtTime(0.0001, AC.currentTime + atk + dcy);
-
-      // Brighten filter on note, settle back slowly
-      globalFilt.frequency.setTargetAtTime(1600 + vel*5000, AC.currentTime, 0.10);
-      globalFilt.frequency.setTargetAtTime(900, AC.currentTime + 0.4, 0.5);
-
-      osc.connect(env); env.connect(globalFilt);
-      osc.start(AC.currentTime);
-      osc.stop(AC.currentTime + atk + dcy + 0.06);
-    }
-
-    function getAmp() {
-      if (!analyser || !analyserData) return 0;
-      analyser.getByteTimeDomainData(analyserData);
-      let peak = 0;
-      for (let i = 0; i < analyserData.length; i++)
-        peak = Math.max(peak, Math.abs(analyserData[i] - 128));
-      return peak / 128;
-    }
-
-    // ── SOUND TOGGLE ─────────────────────────────────────────────
-    const soundBtn = document.getElementById('sound-toggle');
-    soundBtn.addEventListener('click', e => {
-      e.stopPropagation();
-      soundOn = !soundOn;
-      soundBtn.textContent = soundOn ? '♪' : '♩';
-      if (masterGain) masterGain.gain.setTargetAtTime(soundOn ? 0.18 : 0.0001, AC.currentTime, 0.4);
-    });
-
-    // ── MOUSE EVENTS ─────────────────────────────────────────────
-    hero.addEventListener('mousemove', e => {
-      const r = hero.getBoundingClientRect();
-      pmX = mX; pmY = mY;
-      mX  = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width));
-      mY  = Math.max(0, Math.min(1, (e.clientY - r.top)  / r.height));
-
-      const dx = mX - pmX, dy = mY - pmY;
-      mouseSpd = Math.sqrt(dx*dx + dy*dy);
-
-      cursorX = e.clientX - r.left;
-      cursorY = e.clientY - r.top;
-
-      targetRX = 0.18 + (mY - 0.5) * 0.9;
-      targetRY = (mX - 0.5) * 1.8;
-
-      if (!hintHidden) { hintEl.classList.add('hidden'); hintHidden = true; }
-      if (!AC) initAudio();
-
-      // Fast movement → melody note (mouse X selects pitch)
-      if (AC && soundOn && mouseSpd > 0.018) {
-        const idx = Math.floor(mX * (SCALE_HZ.length - 1));
-        playNote(SCALE_HZ[Math.max(0, Math.min(SCALE_HZ.length - 1, idx))], mouseSpd * 40);
-      }
-    });
-
-    hero.addEventListener('mouseenter', () => { inHero = true; });
-    hero.addEventListener('mouseleave', () => {
-      inHero = false;
-      cursorX = -999; cursorY = -999;
-      mouseSpd = 0;
-    });
-
-    // ── TOUCH (mobile): solo init audio, scroll libre, esfera auto-spin ──
-    hero.addEventListener('touchstart', () => {
-      if (!AC) initAudio();
-      if (!hintHidden) { hintEl.classList.add('hidden'); hintHidden = true; }
-    }, {passive: true});
-
-    // ── RENDER LOOP ──────────────────────────────────────────────
-    function render() {
-      T += 0.008;
-      const R = BR();
-
-      // Smooth rotation toward mouse target
-      rotX += (targetRX - rotX) * 0.06;
-      rotY += (targetRY - rotY) * 0.06;
-
-      // Auto-spin when mouse leaves hero
-      const tSpin = inHero ? 0 : 0.004;
-      spin += (tSpin - spin) * 0.03;
-      rotY += spin;
-
-      // ── CLEAR every frame — no trails ────────────────────────
-      ctx.clearRect(0, 0, cW(), cH());
-
-      const amp   = getAmp();
-      const pulse = Math.sin(T * 3.1) * 0.5 + 0.5;
-
-      // Mouse gravity field (pull surface toward cursor direction)
-      const gx     = (mX - 0.5) * 2;
-      const gy     = (mY - 0.5) * 2;
-      const gMag   = Math.sqrt(gx*gx + gy*gy);
-      const gForce = inHero ? Math.min(0.22, gMag * 0.28) : 0;
-
-      // Transform every point
-      const proj = pts.map((p, i) => {
-        const wobble = (amp*0.28 + 0.09 + pulse*0.04) * Math.sin(T*p.fr + p.ph);
-        const dot    = p.ox*gx + p.oy*gy;
-        const pull   = gForce * Math.max(0, dot) * Math.exp((dot - 1) * 3);
-        const r      = R * (1 + wobble + pull);
-        const [rx, ry, rz] = rotate(p.ox*r, p.oy*r, p.oz*r, rotX, rotY);
-        const [sx, sy, sc, z] = project(rx, ry, rz);
-        const depth  = (rz/R + 1) * 0.5; // 0=back, 1=front
-        return {sx, sy, depth, sz: p.sz, rz};
-      });
-
-      // Draw edges — depth-sorted for correct occlusion feel
-      edges
-        .map(([a, b]) => ({a, b, depth: (proj[a].depth + proj[b].depth) * 0.5}))
-        .sort((a, b) => a.depth - b.depth)
-        .forEach(({a, b, depth}) => {
-          ctx.strokeStyle = `rgba(15,15,14,${0.04 + depth * 0.50})`;
-          ctx.lineWidth   = 0.20 + depth * 0.90;
-          ctx.beginPath();
-          ctx.moveTo(proj[a].sx, proj[a].sy);
-          ctx.lineTo(proj[b].sx, proj[b].sy);
-          ctx.stroke();
-        });
-
-      // Draw dots
-      proj.forEach(({sx, sy, depth, sz}) => {
-        const alpha = 0.10 + depth * 0.70;
-        const rad   = Math.max(0.3, (0.55 + depth * 1.3) * sz);
-        ctx.fillStyle = `rgba(15,15,14,${alpha})`;
-        ctx.beginPath();
-        ctx.arc(sx, sy, rad, 0, Math.PI * 2);
-        ctx.fill();
-      });
-
-      // ── CURSOR: concentric rings, inner dot pulses with audio ─
-      if (cursorX > 0 && cursorX < cW()) {
-        const inner = 4;
-        const ring1 = 9  + amp * 18;
-        const ring2 = ring1 * 1.65;
-        const al    = 0.25 + amp * 0.45;
-
-        ctx.strokeStyle = `rgba(15,15,14,${al * 0.3})`;
-        ctx.lineWidth   = 0.5;
-        ctx.beginPath(); ctx.arc(cursorX, cursorY, ring2, 0, Math.PI*2); ctx.stroke();
-
-        ctx.strokeStyle = `rgba(15,15,14,${al})`;
-        ctx.lineWidth   = 1.0;
-        ctx.beginPath(); ctx.arc(cursorX, cursorY, ring1, 0, Math.PI*2); ctx.stroke();
-
-        ctx.fillStyle = `rgba(15,15,14,${0.55 + amp * 0.45})`;
-        ctx.beginPath(); ctx.arc(cursorX, cursorY, inner, 0, Math.PI*2); ctx.fill();
-      }
-
-      // ── STATS readout ────────────────────────────────────────
-      paramsEl.textContent = `${N_PTS}pts · ${edges.length}e · ry=${(rotY%(Math.PI*2)).toFixed(2)}`;
-
-      requestAnimationFrame(render);
-    }
-    render();
-
-    // ── RESIZE ───────────────────────────────────────────────────
-    window.addEventListener('resize', setCanvasSize);
-
-    // ── SCROLL REVEAL ────────────────────────────────────────────
+    // Scroll reveal
     const obs = new IntersectionObserver(entries => {
       entries.forEach(e => {
         if (e.isIntersecting) {
           e.target.classList.add('in');
-          e.target.querySelectorAll('.skill-cell,.edu-cell,.proj-card').forEach((c,i) => {
-            c.style.transitionDelay = (i*0.07)+'s';
+          e.target.querySelectorAll('.skill-card, .edu-card, .proj-card, .exp-item').forEach((c, i) => {
+            c.style.transitionDelay = (i * 0.06) + 's';
           });
         }
       });
-    }, { threshold:0.08, rootMargin:'0px 0px -40px 0px' });
+    }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
     document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
   </script>
 </body>
 </html>
-
