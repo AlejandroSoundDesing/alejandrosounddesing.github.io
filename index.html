@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AGS — Alejandro García Soto</title>
+  <title>AGS — Works / Selected audio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Inter+Tight:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -17,7 +17,7 @@
       --fg-3:    #444444;
       --line:    #1c1c1c;
       --line-2:  #2a2a2a;
-      --accent:  #00e5ff;      /* cian severo, tipo test-card */
+      --accent:  #00e5ff;
       --mono:    'JetBrains Mono', ui-monospace, 'Courier New', monospace;
       --sans:    'Inter Tight', -apple-system, sans-serif;
     }
@@ -39,20 +39,19 @@
 
     a { color: inherit; text-decoration: none; }
 
-    /* Grid de fondo — marca vertical sutil en todo el sitio */
+    /* Grid de fondo */
     body::before {
       content: '';
       position: fixed;
       inset: 0;
-      background-image:
-        linear-gradient(to right, var(--line) 1px, transparent 1px);
+      background-image: linear-gradient(to right, var(--line) 1px, transparent 1px);
       background-size: calc(100vw / 12) 100%;
       pointer-events: none;
       z-index: 1;
       opacity: .55;
     }
 
-    /* Grano muy sutil */
+    /* Grano */
     body::after {
       content: '';
       position: fixed;
@@ -82,7 +81,6 @@
       border-bottom: 1px solid var(--line);
       font-family: var(--mono);
       font-size: .7rem;
-      font-weight: 400;
       letter-spacing: .04em;
       text-transform: uppercase;
     }
@@ -99,35 +97,25 @@
       0%, 100% { opacity: 1; }
       50% { opacity: .35; }
     }
-    .tb-center ul {
-      list-style: none;
-      display: flex;
-      gap: 1.6rem;
-    }
+    .tb-center ul { list-style: none; display: flex; gap: 1.6rem; }
     .tb-center a {
       color: var(--fg-2);
       transition: color .15s;
     }
     .tb-center a:hover { color: var(--fg); }
-    .tb-center a.works {
-      color: var(--accent);
-    }
+    .tb-center a.active { color: var(--accent); }
     .tb-right {
       text-align: right;
       color: var(--fg-2);
     }
     .tb-right .clock { color: var(--fg); }
 
-    /* ── HERO ── */
-    #hero {
-      min-height: 100vh;
-      padding: 8rem 1.5rem 3rem;
-      display: grid;
-      grid-template-columns: 1fr;
-      position: relative;
+    /* ── PAGE HEADER ── */
+    .page-header {
+      padding: 8rem 1.5rem 4rem;
+      border-bottom: 1px solid var(--line);
     }
-
-    .hero-meta {
+    .ph-meta {
       font-family: var(--mono);
       font-size: .68rem;
       color: var(--fg-2);
@@ -140,479 +128,62 @@
       border-bottom: 1px solid var(--line);
       margin-bottom: 3rem;
     }
-    .hero-meta > div { grid-column: span 3; }
-    .hm-lbl { color: var(--fg-3); display: block; margin-bottom: .25rem; }
-    .hm-val { color: var(--fg); }
-    .hm-val .ac { color: var(--accent); }
+    .ph-meta > div { grid-column: span 3; }
+    .phm-lbl { color: var(--fg-3); display: block; margin-bottom: .25rem; }
+    .phm-val { color: var(--fg); }
 
-    .hero-name {
+    .page-title {
       font-family: var(--sans);
       font-weight: 300;
-      font-size: clamp(3rem, 12vw, 11rem);
-      line-height: .88;
+      font-size: clamp(3rem, 10vw, 9rem);
+      line-height: .9;
       letter-spacing: -.04em;
-      margin: 3rem 0 3rem;
-      color: var(--fg);
+      margin-bottom: 2rem;
     }
-    .hero-name .slash {
-      color: var(--accent);
-      font-weight: 400;
-      margin: 0 .15em;
-    }
-    .hero-name .thin {
-      font-weight: 200;
-      color: var(--fg-2);
-    }
+    .page-title .slash { color: var(--accent); margin: 0 .1em; }
+    .page-title .thin { font-weight: 200; color: var(--fg-2); }
 
-    .hero-desc {
-      max-width: 540px;
+    .page-desc {
+      max-width: 560px;
       font-size: 1.05rem;
-      line-height: 1.55;
       color: var(--fg);
-      margin-bottom: 3rem;
-      font-weight: 400;
+      line-height: 1.6;
     }
-    .hero-desc::before {
+    .page-desc::before {
       content: '';
       display: block;
-      width: 40px;
-      height: 1px;
+      width: 40px; height: 1px;
       background: var(--accent);
       margin-bottom: 1.2rem;
     }
 
-    .hero-tags {
-      display: flex; flex-wrap: wrap; gap: .5rem 1.5rem;
-      font-family: var(--mono);
-      font-size: .68rem;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      color: var(--fg-2);
-    }
-    .hero-tags span { display: inline-flex; align-items: center; gap: .5rem; }
-    .hero-tags span::before {
-      content: '';
-      width: 4px; height: 4px;
-      background: var(--accent);
-      display: inline-block;
-    }
-
-    /* Big bar scroll indicator at hero bottom */
-    .hero-rule {
-      position: absolute;
-      left: 1.5rem; right: 1.5rem;
-      bottom: 2rem;
-      display: grid;
-      grid-template-columns: auto 1fr auto;
-      gap: 1rem;
-      align-items: center;
-      font-family: var(--mono);
-      font-size: .65rem;
-      letter-spacing: .1em;
-      text-transform: uppercase;
-      color: var(--fg-3);
-    }
-    .hero-rule .bar {
-      height: 1px;
-      background: var(--line-2);
-      position: relative;
-    }
-    .hero-rule .bar::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0;
-      height: 100%;
-      width: 15%;
-      background: var(--accent);
-      animation: scan 5s ease-in-out infinite;
-    }
-    @keyframes scan {
-      0% { left: 0%; }
-      50% { left: 85%; }
-      100% { left: 0%; }
-    }
-
-    /* ── SECTIONS ── */
-    section:not(#hero) {
-      padding: 5rem 1.5rem;
-      border-top: 1px solid var(--line);
-      position: relative;
-    }
-
-    .sec-head {
-      display: grid;
-      grid-template-columns: 60px 1fr;
-      gap: 1.5rem;
-      padding-bottom: 3rem;
+    /* ── TRACK INDEX (tabla de contenidos) ── */
+    .track-index {
+      padding: 3rem 1.5rem;
       border-bottom: 1px solid var(--line);
-      margin-bottom: 3.5rem;
-      align-items: start;
-    }
-    .sec-num {
-      font-family: var(--mono);
-      font-size: .7rem;
-      color: var(--accent);
-      letter-spacing: .1em;
-      padding-top: .8rem;
-    }
-    .sec-title-block { }
-    .sec-label {
-      font-family: var(--mono);
-      font-size: .7rem;
-      color: var(--fg-3);
-      letter-spacing: .15em;
-      text-transform: uppercase;
-      margin-bottom: .8rem;
-    }
-    .sec-title {
-      font-family: var(--sans);
-      font-weight: 300;
-      font-size: clamp(2rem, 5vw, 3.8rem);
-      line-height: 1;
-      letter-spacing: -.03em;
-      color: var(--fg);
-    }
-    .sec-title em {
-      font-style: normal;
-      color: var(--fg-2);
-    }
-
-    /* ── ABOUT ── */
-    .about-grid {
-      display: grid;
-      grid-template-columns: 60px 6fr 4fr;
-      gap: 1.5rem;
-    }
-    .about-grid > .spacer { }
-    .about-text p {
-      font-size: 1.05rem;
-      line-height: 1.7;
-      color: var(--fg);
-      font-weight: 400;
-    }
-    .about-text p + p { margin-top: 1rem; }
-    .about-text p .hi {
-      color: var(--accent);
-    }
-
-    .about-meta {
       font-family: var(--mono);
       font-size: .75rem;
-      line-height: 1.6;
     }
-    .am-row {
-      display: grid;
-      grid-template-columns: 90px 1fr;
-      gap: 1rem;
-      padding: .85rem 0;
-      border-bottom: 1px solid var(--line);
-    }
-    .am-row:first-child { border-top: 1px solid var(--line); }
-    .am-lbl {
-      color: var(--fg-3);
-      text-transform: uppercase;
-      letter-spacing: .08em;
-      font-size: .65rem;
-      padding-top: .15rem;
-    }
-    .am-val {
-      color: var(--fg);
-    }
-
-    /* ── SKILLS — tabla técnica ── */
-    .skills-table {
-      font-family: var(--mono);
-      font-size: .78rem;
-      margin-left: 60px;
-      margin-left: calc(60px + 1.5rem);
-    }
-    .skt-head {
-      display: grid;
-      grid-template-columns: 40px 2fr 3fr 1fr 1fr;
-      gap: 1rem;
-      padding: .75rem 0;
-      border-bottom: 1px solid var(--line-2);
-      color: var(--fg-3);
-      font-size: .6rem;
-      letter-spacing: .15em;
-      text-transform: uppercase;
-    }
-    .skt-row {
-      display: grid;
-      grid-template-columns: 40px 2fr 3fr 1fr 1fr;
-      gap: 1rem;
-      padding: 1.1rem 0;
-      border-bottom: 1px solid var(--line);
-      align-items: center;
-      transition: background .2s, padding-left .25s;
-      position: relative;
-    }
-    .skt-row::before {
-      content: '';
-      position: absolute;
-      left: -8px; top: 50%;
-      width: 3px; height: 0;
-      background: var(--accent);
-      transition: height .25s ease;
-    }
-    .skt-row:hover {
-      color: var(--fg);
-      padding-left: 12px;
-    }
-    .skt-row:hover::before {
-      height: 70%;
-      transform: translateY(-50%);
-    }
-    .skt-idx {
-      color: var(--fg-3);
-      font-size: .7rem;
-    }
-    .skt-name {
-      color: var(--fg);
-      font-weight: 500;
-      font-size: .95rem;
-      letter-spacing: -.01em;
-    }
-    .skt-desc {
-      color: var(--fg-2);
-      font-size: .72rem;
-      letter-spacing: .02em;
-    }
-    .skt-lvl {
-      color: var(--accent);
-      font-size: .68rem;
-      letter-spacing: .08em;
-    }
-    .skt-meta {
-      color: var(--fg-3);
-      font-size: .68rem;
-      text-align: right;
-    }
-
-    /* ── EXPERIENCE ── */
-    .exp-list {
-      margin-left: calc(60px + 1.5rem);
-    }
-    .exp-item {
-      display: grid;
-      grid-template-columns: 1fr 3fr 2fr;
-      gap: 2rem;
-      padding: 1.8rem 0;
-      border-bottom: 1px solid var(--line);
-      align-items: baseline;
-      transition: background .2s;
-    }
-    .exp-item:first-child { border-top: 1px solid var(--line-2); }
-    .exp-item:hover .exp-role { color: var(--accent); }
-
-    .exp-date {
-      font-family: var(--mono);
-      font-size: .72rem;
-      color: var(--fg-2);
-      letter-spacing: .08em;
-    }
-    .exp-role {
-      font-size: 1.4rem;
-      font-weight: 400;
-      letter-spacing: -.02em;
-      color: var(--fg);
-      margin-bottom: .4rem;
-      transition: color .2s;
-    }
-    .exp-desc {
-      font-size: .85rem;
-      color: var(--fg-2);
-      line-height: 1.55;
-    }
-    .exp-where {
-      font-family: var(--mono);
-      font-size: .72rem;
-      color: var(--fg-2);
-      letter-spacing: .05em;
-      text-align: right;
-    }
-
-    /* ── EDUCATION ── */
-    .edu-list {
-      margin-left: calc(60px + 1.5rem);
-      display: flex;
-      flex-direction: column;
-    }
-    .edu-item {
-      display: grid;
-      grid-template-columns: 140px 1fr auto;
-      gap: 2rem;
-      padding: 2rem 0;
-      border-bottom: 1px solid var(--line);
-      align-items: start;
-    }
-    .edu-item:first-child { border-top: 1px solid var(--line-2); }
-    .edu-status {
-      font-family: var(--mono);
+    .ti-label {
       font-size: .65rem;
       color: var(--fg-3);
-      letter-spacing: .1em;
-      text-transform: uppercase;
-      padding-top: .35rem;
-    }
-    .edu-status.active { color: var(--accent); }
-    .edu-status.active::before {
-      content: '';
-      display: inline-block;
-      width: 6px; height: 6px;
-      background: var(--accent);
-      margin-right: .5rem;
-      vertical-align: middle;
-      animation: pulse 2s ease-in-out infinite;
-    }
-    .edu-deg {
-      font-size: 1.2rem;
-      font-weight: 400;
-      letter-spacing: -.01em;
-      color: var(--fg);
-      margin-bottom: .4rem;
-    }
-    .edu-detail {
-      font-size: .85rem;
-      color: var(--fg-2);
-    }
-    .edu-date {
-      font-family: var(--mono);
-      font-size: .7rem;
-      color: var(--fg-3);
-      letter-spacing: .05em;
-      text-align: right;
-      padding-top: .35rem;
-    }
-
-    /* ── WORKS TEASER con background-image ── */
-    #works-teaser {
-      padding: 0;
-      border-top: 1px solid var(--line);
-      position: relative;
-      overflow: hidden;
-      min-height: 70vh;
-      display: flex;
-      align-items: center;
-    }
-    #works-teaser .bg-layer {
-      position: absolute;
-      inset: 0;
-      background-image: url('assets/textures/background.jpg');
-      background-size: cover;
-      background-position: center;
-      opacity: .35;
-      filter: grayscale(70%) contrast(1.1) brightness(.7);
-      z-index: 0;
-    }
-    #works-teaser::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(180deg, var(--bg) 0%, rgba(10,10,10,.5) 50%, var(--bg) 100%);
-      z-index: 1;
-    }
-    .wt-content {
-      position: relative;
-      z-index: 3;
-      padding: 6rem 1.5rem;
-      width: 100%;
-      display: grid;
-      grid-template-columns: 60px 1fr auto;
-      gap: 1.5rem;
-      align-items: end;
-    }
-    .wt-num {
-      font-family: var(--mono);
-      font-size: .7rem;
-      color: var(--accent);
-      letter-spacing: .1em;
-    }
-    .wt-text { }
-    .wt-label {
-      font-family: var(--mono);
-      font-size: .7rem;
-      color: var(--fg-2);
       letter-spacing: .15em;
       text-transform: uppercase;
-      margin-bottom: 1.2rem;
-    }
-    .wt-title {
-      font-family: var(--sans);
-      font-weight: 300;
-      font-size: clamp(2.5rem, 7vw, 5rem);
-      line-height: .95;
-      letter-spacing: -.04em;
       margin-bottom: 1.5rem;
     }
-    .wt-title em {
-      font-style: normal;
-      color: var(--accent);
-    }
-    .wt-desc {
-      max-width: 500px;
-      font-size: 1rem;
-      color: var(--fg-2);
-      line-height: 1.6;
-    }
-    .wt-cta {
-      display: inline-flex;
-      align-items: center;
-      gap: .8rem;
-      padding: 1rem 1.5rem;
-      border: 1px solid var(--fg);
-      color: var(--fg);
-      font-family: var(--mono);
-      font-size: .75rem;
-      letter-spacing: .15em;
-      text-transform: uppercase;
-      transition: background .2s, color .2s;
-    }
-    .wt-cta:hover {
-      background: var(--accent);
-      color: var(--bg);
-      border-color: var(--accent);
-    }
-    .wt-cta .arrow {
-      transition: transform .2s;
-    }
-    .wt-cta:hover .arrow { transform: translateX(4px); }
-
-    /* ── CONTACT ── */
-    #contact {
-      padding: 6rem 1.5rem;
-    }
-    .contact-grid {
+    .ti-list { display: flex; flex-direction: column; }
+    .ti-row {
       display: grid;
-      grid-template-columns: 60px 1fr 1fr;
-      gap: 1.5rem;
-    }
-    .contact-title {
-      font-family: var(--sans);
-      font-weight: 300;
-      font-size: clamp(2.2rem, 5vw, 4rem);
-      line-height: .95;
-      letter-spacing: -.03em;
-    }
-    .contact-title em {
-      font-style: normal;
-      color: var(--accent);
-    }
-    .contact-links { }
-    .c-link {
-      display: grid;
-      grid-template-columns: 80px 1fr 20px;
-      gap: 1rem;
-      align-items: center;
-      padding: 1.2rem 0;
+      grid-template-columns: 60px 1fr auto auto;
+      gap: 2rem;
+      padding: .9rem 0;
       border-bottom: 1px solid var(--line);
-      font-family: var(--mono);
-      font-size: .82rem;
+      align-items: center;
       transition: padding-left .25s, color .2s;
       position: relative;
     }
-    .c-link:first-of-type { border-top: 1px solid var(--line); }
-    .c-link::before {
+    .ti-row:first-child { border-top: 1px solid var(--line-2); }
+    .ti-row::before {
       content: '';
       position: absolute;
       left: -4px; top: 50%;
@@ -621,23 +192,243 @@
       transition: height .25s;
       transform: translateY(-50%);
     }
-    .c-link:hover {
-      padding-left: 14px;
+    .ti-row:hover {
+      padding-left: 12px;
       color: var(--accent);
     }
-    .c-link:hover::before { height: 60%; }
-    .c-lbl {
+    .ti-row:hover::before { height: 65%; }
+    .ti-code { color: var(--fg-3); }
+    .ti-name { color: var(--fg); font-size: .85rem; letter-spacing: .02em; }
+    .ti-name b { font-family: var(--sans); font-weight: 500; font-size: 1rem; margin-right: .8rem; }
+    .ti-dur, .ti-cat { color: var(--fg-3); font-size: .7rem; letter-spacing: .08em; }
+
+    /* ── TRACKS ── */
+    .tracks-wrap { padding: 5rem 1.5rem; }
+
+    .track {
+      padding: 5rem 0;
+      border-top: 1px solid var(--line);
+      display: grid;
+      grid-template-columns: 60px 1fr;
+      gap: 1.5rem;
+    }
+    .track:first-child { border-top: none; padding-top: 0; }
+
+    .track-num {
+      font-family: var(--mono);
+      font-size: .7rem;
+      color: var(--accent);
+      letter-spacing: .1em;
+      padding-top: .2rem;
+      position: sticky;
+      top: 5rem;
+      align-self: start;
+      height: fit-content;
+    }
+
+    .track-body {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+    }
+
+    /* Cover — cuadrada, ocupa una columna */
+    .track-cover {
+      position: relative;
+      aspect-ratio: 1 / 1;
+      overflow: hidden;
+      background: var(--bg-2);
+      border: 1px solid var(--line-2);
+    }
+    .track-cover img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform .6s cubic-bezier(.2,.7,.2,1), filter .4s;
+    }
+    .track:hover .track-cover img {
+      transform: scale(1.02);
+    }
+    .track-cover .cover-meta {
+      position: absolute;
+      top: 1rem; left: 1rem; right: 1rem;
+      display: flex; justify-content: space-between;
+      font-family: var(--mono);
+      font-size: .6rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, .75);
+      mix-blend-mode: difference;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    /* Track info column */
+    .track-info {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 2rem;
+    }
+
+    .ti-code-big {
+      font-family: var(--mono);
+      font-size: .7rem;
       color: var(--fg-3);
-      font-size: .62rem;
       letter-spacing: .15em;
       text-transform: uppercase;
+      margin-bottom: 1.2rem;
     }
-    .c-val { color: var(--fg); }
-    .c-link:hover .c-val { color: var(--accent); }
-    .c-arrow {
-      text-align: right;
-      color: var(--fg-3);
+    .track-title {
+      font-family: var(--sans);
+      font-weight: 300;
+      font-size: clamp(2rem, 5vw, 3.6rem);
+      line-height: .95;
+      letter-spacing: -.03em;
+      margin-bottom: 1.5rem;
+    }
+    .track-subtitle {
       font-family: var(--mono);
+      font-size: .75rem;
+      color: var(--accent);
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+    }
+    .track-notes {
+      font-size: .95rem;
+      line-height: 1.65;
+      color: var(--fg);
+      max-width: 440px;
+    }
+    .track-notes p + p { margin-top: .8rem; }
+
+    /* Tech spec */
+    .track-spec {
+      font-family: var(--mono);
+      font-size: .72rem;
+    }
+    .spec-label {
+      font-size: .6rem;
+      color: var(--fg-3);
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+    .spec-grid {
+      display: grid;
+      grid-template-columns: 100px 1fr;
+      gap: .6rem 1.5rem;
+    }
+    .spec-grid dt {
+      color: var(--fg-3);
+      font-size: .62rem;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      padding-top: .15rem;
+      border-top: 1px solid var(--line);
+    }
+    .spec-grid dd {
+      color: var(--fg);
+      font-size: .72rem;
+      padding-top: .15rem;
+      border-top: 1px solid var(--line);
+    }
+
+    /* ── PLAYER ── */
+    .player {
+      margin-top: 2rem;
+      border: 1px solid var(--line-2);
+      padding: 1.2rem 1.4rem;
+      background: var(--bg-2);
+      transition: border-color .25s;
+    }
+    .player.playing { border-color: var(--accent); }
+
+    .player-row {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 1.2rem;
+      align-items: center;
+    }
+
+    .play-btn {
+      width: 42px; height: 42px;
+      border-radius: 50%;
+      border: 1px solid var(--fg);
+      background: transparent;
+      color: var(--fg);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--mono);
+      font-size: .72rem;
+      padding: 0;
+      transition: background .2s, color .2s, border-color .2s, transform .1s;
+    }
+    .play-btn:hover {
+      background: var(--accent);
+      color: var(--bg);
+      border-color: var(--accent);
+    }
+    .play-btn:active { transform: scale(.94); }
+    .play-btn .icon {
+      display: inline-block;
+      line-height: 1;
+      transform: translateX(1px);
+    }
+    .play-btn.is-playing .icon {
+      transform: translateX(0);
+    }
+
+    .progress-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: .5rem;
+    }
+    .progress-rail {
+      height: 2px;
+      background: var(--line-2);
+      position: relative;
+      cursor: pointer;
+      overflow: visible;
+    }
+    .progress-fill {
+      position: absolute;
+      left: 0; top: 0;
+      height: 100%;
+      width: 0%;
+      background: var(--accent);
+    }
+    .progress-head {
+      position: absolute;
+      top: 50%; left: 0%;
+      width: 8px; height: 8px;
+      background: var(--accent);
+      transform: translate(-50%, -50%);
+      opacity: 0;
+      transition: opacity .15s;
+    }
+    .progress-rail:hover .progress-head,
+    .player.playing .progress-head { opacity: 1; }
+
+    .time-disp {
+      font-family: var(--mono);
+      font-size: .68rem;
+      color: var(--fg-2);
+      letter-spacing: .08em;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    /* Waveform canvas (visualizer) */
+    .wf {
+      display: block;
+      width: 100%;
+      height: 32px;
+      margin-top: .5rem;
     }
 
     /* ── FOOTER ── */
@@ -676,7 +467,7 @@
     }
     .ft-sig .ac { color: var(--accent); }
 
-    /* ── SCROLL REVEAL ── */
+    /* Reveal */
     .reveal {
       opacity: 0;
       transform: translateY(18px);
@@ -684,52 +475,24 @@
     }
     .reveal.in { opacity: 1; transform: none; }
 
-    /* ── RESPONSIVE ── */
+    /* Responsive */
     @media (max-width: 900px) {
-      body::before {
-        background-size: calc(100vw / 6) 100%;
-      }
-      .topbar {
-        grid-template-columns: 1fr auto;
-        padding: .8rem 1rem;
-      }
+      body::before { background-size: calc(100vw / 6) 100%; }
+      .topbar { grid-template-columns: 1fr auto; padding: .8rem 1rem; }
       .tb-center { display: none; }
       .tb-right { font-size: .6rem; }
-      #hero { padding: 6rem 1rem 5rem; }
-      section:not(#hero), footer { padding-left: 1rem; padding-right: 1rem; }
-      .hero-meta { grid-template-columns: repeat(2, 1fr); }
-      .hero-meta > div { grid-column: span 1; }
-      .hero-rule { left: 1rem; right: 1rem; }
-      .sec-head { grid-template-columns: 40px 1fr; gap: 1rem; }
-      .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
-      .about-grid > .spacer { display: none; }
-      .skills-table, .exp-list, .edu-list { margin-left: 0; }
-      .skt-head, .skt-row {
-        grid-template-columns: 30px 1fr auto;
-      }
-      .skt-head > :nth-child(3), .skt-row > :nth-child(3),
-      .skt-head > :nth-child(5), .skt-row > :nth-child(5) { display: none; }
-      .exp-item { grid-template-columns: 1fr; gap: .6rem; }
-      .exp-where { text-align: left; }
-      .edu-item { grid-template-columns: 1fr; gap: .5rem; }
-      .edu-date { text-align: left; }
-      .wt-content {
-        grid-template-columns: 40px 1fr;
-        gap: 1rem;
-        padding: 4rem 1rem;
-      }
-      .wt-cta { grid-column: 2 / -1; justify-self: start; margin-top: 1.5rem; }
-      .contact-grid { grid-template-columns: 1fr; gap: 2rem; }
-      footer {
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
-      }
+      .page-header { padding: 6rem 1rem 3rem; }
+      .ph-meta { grid-template-columns: repeat(2, 1fr); }
+      .ph-meta > div { grid-column: span 1; }
+      .track-index, .tracks-wrap, footer { padding-left: 1rem; padding-right: 1rem; }
+      .ti-row { grid-template-columns: 50px 1fr auto; gap: 1rem; }
+      .ti-row > :nth-child(4) { display: none; }
+      .track { grid-template-columns: 40px 1fr; gap: 1rem; padding: 3.5rem 0; }
+      .track-body { grid-template-columns: 1fr; gap: 2rem; }
+      .track-num { position: static; }
+      .spec-grid { grid-template-columns: 80px 1fr; }
+      footer { grid-template-columns: 1fr; gap: 1.5rem; }
       .ft-sig { text-align: left; }
-    }
-
-    @media (max-width: 560px) {
-      .hero-name { font-size: clamp(2.5rem, 15vw, 5rem); }
-      .ft-meta { grid-template-columns: 1fr 1fr; gap: 1rem; }
     }
   </style>
 </head>
@@ -740,10 +503,9 @@
     <div class="tb-left"><span class="dot"></span>AGS / Alejandro García Soto</div>
     <div class="tb-center">
       <ul>
-        <li><a href="#about">[ about ]</a></li>
-        <li><a href="#skills">[ skills ]</a></li>
-        <li><a href="#works" class="works">[ works ]</a></li>
-        <li><a href="#contact">[ contact ]</a></li>
+        <li><a href="index.html">[ index ]</a></li>
+        <li><a href="#tracks" class="active">[ works ]</a></li>
+        <li><a href="index.html#contact">[ contact ]</a></li>
       </ul>
     </div>
     <div class="tb-right">
@@ -753,294 +515,234 @@
 
   <main>
 
-    <!-- HERO -->
-    <section id="hero">
-      <div class="hero-meta">
+    <!-- HEADER -->
+    <header class="page-header">
+      <div class="ph-meta">
         <div>
-          <span class="hm-lbl">// index</span>
-          <span class="hm-val">PORTFOLIO · MMXXV</span>
+          <span class="phm-lbl">// page</span>
+          <span class="phm-val">WORKS / 02</span>
         </div>
         <div>
-          <span class="hm-lbl">// category</span>
-          <span class="hm-val">SOUND · AI · CODE</span>
+          <span class="phm-lbl">// category</span>
+          <span class="phm-val">AUDIO · SELECTED</span>
         </div>
         <div>
-          <span class="hm-lbl">// loc</span>
-          <span class="hm-val">40.4168°N / 3.7038°W</span>
+          <span class="phm-lbl">// count</span>
+          <span class="phm-val">003 STUDIES</span>
         </div>
         <div>
-          <span class="hm-lbl">// status</span>
-          <span class="hm-val"><span class="ac">●</span> AVAILABLE</span>
+          <span class="phm-lbl">// period</span>
+          <span class="phm-val">2024 — 2025</span>
         </div>
       </div>
 
-      <h1 class="hero-name">
-        Alejandro<span class="slash">/</span><br>
-        García<br>
-        <span class="thin">Soto</span>
+      <h1 class="page-title">
+        Works<span class="slash">/</span><br>
+        <span class="thin">selected audio</span>
       </h1>
 
-      <p class="hero-desc">
-        Sound designer, productor y músico. Trabajo en la intersección entre audio, código y sistemas generativos — desde síntesis en Pure Data hasta experimentación con IA aplicada al sonido.
+      <p class="page-desc">
+        Tres estudios de sonido recientes. Cada pieza es un ejercicio distinto: el primero explora estructura y ritmo, el segundo trabaja texturas armónicas sostenidas, el tercero es una drone larga para escucha profunda. Muestra honesta de lo que estoy haciendo, no un catálogo comercial.
       </p>
+    </header>
 
-      <div class="hero-tags">
-        <span>Sound Design</span>
-        <span>Music Production</span>
-        <span>Generative Audio</span>
-        <span>AI / ML</span>
-        <span>Pure Data</span>
-        <span>Game Audio</span>
-      </div>
-
-      <div class="hero-rule">
-        <span>SCROLL</span>
-        <div class="bar"></div>
-        <span>00 / 06</span>
-      </div>
-    </section>
-
-    <!-- ABOUT -->
-    <section id="about">
-      <div class="sec-head reveal">
-        <div class="sec-num">01</div>
-        <div class="sec-title-block">
-          <div class="sec-label">// profile</div>
-          <h2 class="sec-title">Sobre <em>mí</em>.</h2>
-        </div>
-      </div>
-
-      <div class="about-grid">
-        <div class="spacer"></div>
-        <div class="about-text reveal">
-          <p>
-            Técnico Superior de Sonido con <span class="hi">más de seis años</span> de experiencia en producción y diseño sonoro. Mi trabajo cruza disciplinas: desde la sala de teatro hasta el estudio de videojuegos, pasando por síntesis generativa en Pure Data y experimentación con inteligencia artificial aplicada al audio.
-          </p>
-          <p>
-            Empecé con el violín —ocho años, nivel grado medio— antes de encontrar en el software un nuevo instrumento. Composición, solfeo, informática musical: la teoría siempre ha estado debajo de la práctica. Hoy construyo experiencias sonoras que no caben en una sola categoría.
-          </p>
-          <p>
-            Actualmente cursando un <span class="hi">Máster en Música para Videojuegos</span> y el <span class="hi">Programa Superior en Inteligencia Artificial</span>.
-          </p>
-        </div>
-        <div class="about-meta reveal">
-          <div class="am-row">
-            <div class="am-lbl">Based</div>
-            <div class="am-val">Madrid, ES</div>
-          </div>
-          <div class="am-row">
-            <div class="am-lbl">Lang</div>
-            <div class="am-val">ES native<br>EN advanced</div>
-          </div>
-          <div class="am-row">
-            <div class="am-lbl">Email</div>
-            <div class="am-val" style="font-size:.7rem">ofcanadaboards@<br>gmail.com</div>
-          </div>
-          <div class="am-row">
-            <div class="am-lbl">Phone</div>
-            <div class="am-val">+34 649 466 511</div>
-          </div>
-          <div class="am-row">
-            <div class="am-lbl">Avail</div>
-            <div class="am-val">Garantía Juvenil</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- SKILLS -->
-    <section id="skills">
-      <div class="sec-head reveal">
-        <div class="sec-num">02</div>
-        <div class="sec-title-block">
-          <div class="sec-label">// tools / stack</div>
-          <h2 class="sec-title">Herramientas <em>técnicas</em>.</h2>
-        </div>
-      </div>
-
-      <div class="skills-table reveal">
-        <div class="skt-head">
-          <div>idx</div>
-          <div>tool</div>
-          <div>usage</div>
-          <div>level</div>
-          <div>since</div>
-        </div>
-        <div class="skt-row">
-          <div class="skt-idx">01</div>
-          <div class="skt-name">Ableton Live</div>
-          <div class="skt-desc">DAW · Producción · Live performance · Max for Live</div>
-          <div class="skt-lvl">EXPERT</div>
-          <div class="skt-meta">6Y</div>
-        </div>
-        <div class="skt-row">
-          <div class="skt-idx">02</div>
-          <div class="skt-name">Pro Tools</div>
-          <div class="skt-desc">Grabación · Post-producción · Edición · Mezcla</div>
-          <div class="skt-lvl">PRO</div>
-          <div class="skt-meta">4Y</div>
-        </div>
-        <div class="skt-row">
-          <div class="skt-idx">03</div>
-          <div class="skt-name">Pure Data</div>
-          <div class="skt-desc">Síntesis · Audio generativo · DSP · OSC</div>
-          <div class="skt-lvl">ADV</div>
-          <div class="skt-meta">3Y</div>
-        </div>
-        <div class="skt-row">
-          <div class="skt-idx">04</div>
-          <div class="skt-name">Python</div>
-          <div class="skt-desc">Scripting · Audio analysis · Procesado · librosa</div>
-          <div class="skt-lvl">INT</div>
-          <div class="skt-meta">2Y</div>
-        </div>
-        <div class="skt-row">
-          <div class="skt-idx">05</div>
-          <div class="skt-name">Arduino</div>
-          <div class="skt-desc">Hardware · Instalaciones · Serial · Sensores</div>
-          <div class="skt-lvl">INT</div>
-          <div class="skt-meta">2Y</div>
-        </div>
-        <div class="skt-row">
-          <div class="skt-idx">06</div>
-          <div class="skt-name">AI / LLMs</div>
-          <div class="skt-desc">Generative audio · Prompt engineering · Claude</div>
-          <div class="skt-lvl">ACTIVE</div>
-          <div class="skt-meta">1Y</div>
-        </div>
-      </div>
-    </section>
-
-    <!-- EXPERIENCE -->
-    <section id="experience">
-      <div class="sec-head reveal">
-        <div class="sec-num">03</div>
-        <div class="sec-title-block">
-          <div class="sec-label">// field work</div>
-          <h2 class="sec-title">Experiencia.</h2>
-        </div>
-      </div>
-
-      <div class="exp-list reveal">
-        <div class="exp-item">
-          <div class="exp-date">2025 —</div>
-          <div>
-            <div class="exp-role">DJ Residente</div>
-            <div class="exp-desc">Diseño de ambientes sonoros y selecciones musicales en directo para el espacio gastronómico.</div>
-          </div>
-          <div class="exp-where">Restaurante<br>Entreaguas</div>
-        </div>
-        <div class="exp-item">
-          <div class="exp-date">2024 / 2025</div>
-          <div>
-            <div class="exp-role">Técnico de Sonido</div>
-            <div class="exp-desc">Montaje y control de equipos de sonido, escenografía y colaboración técnica en eventos en directo.</div>
-          </div>
-          <div class="exp-where">Teatro Palenque<br>&amp; Victoria</div>
-        </div>
-      </div>
-    </section>
-
-    <!-- EDUCATION -->
-    <section id="education">
-      <div class="sec-head reveal">
-        <div class="sec-num">04</div>
-        <div class="sec-title-block">
-          <div class="sec-label">// training</div>
-          <h2 class="sec-title">Formación.</h2>
-        </div>
-      </div>
-
-      <div class="edu-list reveal">
-        <div class="edu-item">
-          <div class="edu-status active">ongoing</div>
-          <div>
-            <div class="edu-deg">Máster en Música para Videojuegos</div>
-            <div class="edu-detail">Composición interactiva · Audio adaptativo · Implementación</div>
-          </div>
-          <div class="edu-date">2025 →</div>
-        </div>
-        <div class="edu-item">
-          <div class="edu-status active">ongoing</div>
-          <div>
-            <div class="edu-deg">Programa Superior en Inteligencia Artificial</div>
-            <div class="edu-detail">Machine learning · Modelos generativos · Aplicaciones de IA</div>
-          </div>
-          <div class="edu-date">2025 →</div>
-        </div>
-        <div class="edu-item">
-          <div class="edu-status">completed</div>
-          <div>
-            <div class="edu-deg">Técnico Superior de Sonido</div>
-            <div class="edu-detail">Alfonso X el Sabio — grabación, mezcla, post-producción, directo</div>
-          </div>
-          <div class="edu-date">2022 / 2024</div>
-        </div>
-        <div class="edu-item">
-          <div class="edu-status">base</div>
-          <div>
-            <div class="edu-deg">Violín · Composición · Solfeo · Informática Musical</div>
-            <div class="edu-detail">8 años de violín — nivel grado medio</div>
-          </div>
-          <div class="edu-date">—</div>
-        </div>
-      </div>
-    </section>
-
-    <!-- WORKS TEASER -->
-    <section id="works-teaser">
-      <div class="bg-layer"></div>
-      <div class="wt-content reveal">
-        <div class="wt-num">05</div>
-        <div class="wt-text">
-          <div class="wt-label">// selected works / 2024–2025</div>
-          <h2 class="wt-title">Tres <em>estudios</em><br>en audio.</h2>
-          <p class="wt-desc">
-            Una selección pequeña y honesta de piezas recientes. Experimentos de síntesis, ambient armónico y drone largo — cada uno con su propia lógica interna.
-          </p>
-        </div>
-        <a href="works.html" class="wt-cta">
-          Ver works
-          <span class="arrow">→</span>
+    <!-- TRACK INDEX -->
+    <section class="track-index">
+      <div class="ti-label">// track list</div>
+      <div class="ti-list">
+        <a href="#ags-001" class="ti-row">
+          <span class="ti-code">AGS-001</span>
+          <span class="ti-name"><b>Transit</b></span>
+          <span class="ti-cat">EXPERIMENTAL · ELECTRONIC</span>
+          <span class="ti-dur">01:13</span>
+        </a>
+        <a href="#ags-002" class="ti-row">
+          <span class="ti-code">AGS-002</span>
+          <span class="ti-name"><b>Bloom</b></span>
+          <span class="ti-cat">AMBIENT · HARMONIC</span>
+          <span class="ti-dur">04:43</span>
+        </a>
+        <a href="#ags-003" class="ti-row">
+          <span class="ti-code">AGS-003</span>
+          <span class="ti-name"><b>Rosa</b></span>
+          <span class="ti-cat">DRONE · DEEP LISTENING</span>
+          <span class="ti-dur">10:11</span>
         </a>
       </div>
     </section>
 
-    <!-- CONTACT -->
-    <section id="contact">
-      <div class="sec-head reveal">
-        <div class="sec-num">06</div>
-        <div class="sec-title-block">
-          <div class="sec-label">// end transmission</div>
-          <h2 class="sec-title">Contacto.</h2>
-        </div>
-      </div>
+    <!-- TRACKS -->
+    <section class="tracks-wrap" id="tracks">
 
-      <div class="contact-grid reveal">
-        <div class="spacer"></div>
-        <div>
-          <div class="contact-title">
-            ¿Hablamos<br>de <em>sonido</em>?
+      <!-- AGS-001 · TRANSIT -->
+      <article class="track reveal" id="ags-001">
+        <div class="track-num">01</div>
+        <div class="track-body">
+          <div class="track-cover">
+            <div class="cover-meta">
+              <span>AGS-001</span>
+              <span>01:13</span>
+            </div>
+            <img src="assets/covers/ags-001-transit.png" alt="Transit cover" loading="lazy">
+          </div>
+          <div class="track-info">
+            <div>
+              <div class="ti-code-big">AGS-001 / 2024</div>
+              <h3 class="track-title">Transit.</h3>
+              <div class="track-subtitle">— experimental / electronic</div>
+              <div class="track-notes">
+                <p>Pieza corta con arco narrativo. Construye, se asienta a mitad, se desarma al final. Estructura rítmica basada en cortes y capas percusivas.</p>
+                <p>136 BPM. Mezcla casi simétrica de contenido armónico y percusivo. Un estudio sobre forma cerrada en el menor tiempo posible.</p>
+              </div>
+            </div>
+
+            <div class="track-spec">
+              <div class="spec-label">// technical</div>
+              <dl class="spec-grid">
+                <dt>Duración</dt><dd>01:13</dd>
+                <dt>Tempo</dt><dd>136 BPM</dd>
+                <dt>Formato</dt><dd>MP3 · 320kbps · 48kHz · stereo</dd>
+                <dt>Herramientas</dt><dd>Ableton Live</dd>
+                <dt>Estado</dt><dd>Finalizado</dd>
+              </dl>
+            </div>
+
+            <!-- Player -->
+            <div class="player" data-player="1">
+              <audio src="assets/tracks/ags-001-transit.mp3" preload="metadata"></audio>
+              <div class="player-row">
+                <button class="play-btn" aria-label="Play Transit">
+                  <span class="icon">▶</span>
+                </button>
+                <div class="progress-wrap">
+                  <div class="progress-rail">
+                    <div class="progress-fill"></div>
+                    <div class="progress-head"></div>
+                  </div>
+                  <canvas class="wf" width="400" height="32"></canvas>
+                  <div class="time-disp">
+                    <span class="t-cur">0:00</span>
+                    <span class="t-tot">1:13</span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-        <div class="contact-links">
-          <a href="mailto:ofcanadaboards@gmail.com" class="c-link">
-            <span class="c-lbl">Email</span>
-            <span class="c-val">ofcanadaboards@gmail.com</span>
-            <span class="c-arrow">↗</span>
-          </a>
-          <a href="tel:+34649466511" class="c-link">
-            <span class="c-lbl">Phone</span>
-            <span class="c-val">+34 649 466 511</span>
-            <span class="c-arrow">↗</span>
-          </a>
-          <a href="works.html" class="c-link">
-            <span class="c-lbl">Works</span>
-            <span class="c-val">Audio selection</span>
-            <span class="c-arrow">↗</span>
-          </a>
+      </article>
+
+      <!-- AGS-002 · BLOOM -->
+      <article class="track reveal" id="ags-002">
+        <div class="track-num">02</div>
+        <div class="track-body">
+          <div class="track-cover">
+            <div class="cover-meta">
+              <span>AGS-002</span>
+              <span>04:43</span>
+            </div>
+            <img src="assets/covers/ags-002-bloom.jpg" alt="Bloom cover" loading="lazy">
+          </div>
+          <div class="track-info">
+            <div>
+              <div class="ti-code-big">AGS-002 / 2024</div>
+              <h3 class="track-title">Bloom.</h3>
+              <div class="track-subtitle">— ambient / harmonic texture</div>
+              <div class="track-notes">
+                <p>Textura armónica sostenida, casi sin percusión. Contenido al 92% armónico según análisis espectral — capas que se superponen y flotan sin resolver.</p>
+                <p>Un estudio sobre suspensión: qué pasa cuando una pieza renuncia al ritmo y se confía enteramente a la armonía y al timbre.</p>
+              </div>
+            </div>
+
+            <div class="track-spec">
+              <div class="spec-label">// technical</div>
+              <dl class="spec-grid">
+                <dt>Duración</dt><dd>04:43</dd>
+                <dt>Perfil</dt><dd>92% armónico</dd>
+                <dt>Formato</dt><dd>MP3 · 320kbps · 48kHz · stereo</dd>
+                <dt>Master</dt><dd>WAV 16-bit</dd>
+                <dt>Estado</dt><dd>Finalizado</dd>
+              </dl>
+            </div>
+
+            <div class="player" data-player="2">
+              <audio src="assets/tracks/ags-002-bloom.mp3" preload="metadata"></audio>
+              <div class="player-row">
+                <button class="play-btn" aria-label="Play Bloom">
+                  <span class="icon">▶</span>
+                </button>
+                <div class="progress-wrap">
+                  <div class="progress-rail">
+                    <div class="progress-fill"></div>
+                    <div class="progress-head"></div>
+                  </div>
+                  <canvas class="wf" width="400" height="32"></canvas>
+                  <div class="time-disp">
+                    <span class="t-cur">0:00</span>
+                    <span class="t-tot">4:43</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
+      </article>
+
+      <!-- AGS-003 · ROSA -->
+      <article class="track reveal" id="ags-003">
+        <div class="track-num">03</div>
+        <div class="track-body">
+          <div class="track-cover">
+            <div class="cover-meta">
+              <span>AGS-003</span>
+              <span>10:11</span>
+            </div>
+            <img src="assets/covers/ags-003-rosa.png" alt="Rosa cover" loading="lazy">
+          </div>
+          <div class="track-info">
+            <div>
+              <div class="ti-code-big">AGS-003 / 2024</div>
+              <h3 class="track-title">Rosa.</h3>
+              <div class="track-subtitle">— drone / deep listening</div>
+              <div class="track-notes">
+                <p>Drone larga de diez minutos. 97% armónico, sin tempo detectable, dinámica contenida. Una pieza-objeto: no evoluciona en sentido tradicional, se despliega.</p>
+                <p>Pensada para escucha prolongada — fondo activo, ambiente sonoro, espacio a habitar. El nombre es literal: una sola superficie, una sola cosa.</p>
+              </div>
+            </div>
+
+            <div class="track-spec">
+              <div class="spec-label">// technical</div>
+              <dl class="spec-grid">
+                <dt>Duración</dt><dd>10:11</dd>
+                <dt>Perfil</dt><dd>97% armónico · no-tempo</dd>
+                <dt>Formato</dt><dd>MP3 · 320kbps · 48kHz · stereo</dd>
+                <dt>Registro</dt><dd>Centroid ~330 Hz</dd>
+                <dt>Estado</dt><dd>Finalizado</dd>
+              </dl>
+            </div>
+
+            <div class="player" data-player="3">
+              <audio src="assets/tracks/ags-003-rosa.mp3" preload="metadata"></audio>
+              <div class="player-row">
+                <button class="play-btn" aria-label="Play Rosa">
+                  <span class="icon">▶</span>
+                </button>
+                <div class="progress-wrap">
+                  <div class="progress-rail">
+                    <div class="progress-fill"></div>
+                    <div class="progress-head"></div>
+                  </div>
+                  <canvas class="wf" width="400" height="32"></canvas>
+                  <div class="time-disp">
+                    <span class="t-cur">0:00</span>
+                    <span class="t-tot">10:11</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
     </section>
 
   </main>
@@ -1051,7 +753,7 @@
     <div class="ft-meta">
       <div><span>// year</span><b>2025</b></div>
       <div><span>// loc</span><b>Madrid · ES</b></div>
-      <div><span>// build</span><b>v1.2 — static</b></div>
+      <div><span>// tracks</span><b>003 / selected</b></div>
     </div>
     <div class="ft-sig">
       <span class="ac">●</span> Alejandro García Soto © MMXXV
@@ -1059,25 +761,135 @@
   </footer>
 
   <script>
-    // Clock en la topbar
+    // ── Clock ────────────────────────────────────────────
     function updateClock() {
       const now = new Date();
       const opts = { timeZone: 'Europe/Madrid', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
       const clockEl = document.getElementById('clock');
       if (clockEl) clockEl.textContent = now.toLocaleTimeString('en-GB', opts);
     }
-    updateClock();
-    setInterval(updateClock, 1000);
+    updateClock(); setInterval(updateClock, 1000);
 
-    // Scroll reveal
+    // ── Reveal ────────────────────────────────────────────
     const obs = new IntersectionObserver(entries => {
-      entries.forEach(e => {
-        if (e.isIntersecting) {
-          e.target.classList.add('in');
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+    }, { threshold: 0.05, rootMargin: '0px 0px -40px 0px' });
+    document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+    // ── Audio Players ─────────────────────────────────────
+    // Un solo track sonando a la vez
+    let currentlyPlaying = null;
+
+    function fmt(t) {
+      if (isNaN(t)) return '0:00';
+      const m = Math.floor(t / 60);
+      const s = Math.floor(t % 60);
+      return `${m}:${s.toString().padStart(2, '0')}`;
+    }
+
+    document.querySelectorAll('.player').forEach(player => {
+      const audio  = player.querySelector('audio');
+      const btn    = player.querySelector('.play-btn');
+      const icon   = player.querySelector('.play-btn .icon');
+      const rail   = player.querySelector('.progress-rail');
+      const fill   = player.querySelector('.progress-fill');
+      const head   = player.querySelector('.progress-head');
+      const tCur   = player.querySelector('.t-cur');
+      const tTot   = player.querySelector('.t-tot');
+      const wf     = player.querySelector('.wf');
+
+      // Dibujar waveform estático (pseudo — placeholder visual hasta que cargue audio)
+      drawStaticWaveform(wf);
+
+      audio.addEventListener('loadedmetadata', () => {
+        tTot.textContent = fmt(audio.duration);
+      });
+
+      btn.addEventListener('click', () => {
+        if (audio.paused) {
+          // Pausar el que esté sonando
+          if (currentlyPlaying && currentlyPlaying !== audio) {
+            currentlyPlaying.pause();
+          }
+          audio.play();
+          currentlyPlaying = audio;
+        } else {
+          audio.pause();
         }
       });
-    }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
-    document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+      audio.addEventListener('play', () => {
+        icon.textContent = '❚❚';
+        btn.classList.add('is-playing');
+        player.classList.add('playing');
+      });
+      audio.addEventListener('pause', () => {
+        icon.textContent = '▶';
+        btn.classList.remove('is-playing');
+        player.classList.remove('playing');
+      });
+      audio.addEventListener('ended', () => {
+        icon.textContent = '▶';
+        btn.classList.remove('is-playing');
+        player.classList.remove('playing');
+        fill.style.width = '0%';
+        head.style.left = '0%';
+      });
+
+      audio.addEventListener('timeupdate', () => {
+        if (audio.duration) {
+          const pct = (audio.currentTime / audio.duration) * 100;
+          fill.style.width = pct + '%';
+          head.style.left = pct + '%';
+          tCur.textContent = fmt(audio.currentTime);
+        }
+      });
+
+      // Click en progress rail para saltar
+      rail.addEventListener('click', (e) => {
+        if (!audio.duration) return;
+        const r = rail.getBoundingClientRect();
+        const pct = (e.clientX - r.left) / r.width;
+        audio.currentTime = pct * audio.duration;
+      });
+    });
+
+    // ── Waveform estático (decorativo) ─────────────────────
+    function drawStaticWaveform(canvas) {
+      const ctx = canvas.getContext('2d');
+      const dpr = window.devicePixelRatio || 1;
+      const w = canvas.offsetWidth || 400;
+      const h = 32;
+      canvas.width = w * dpr;
+      canvas.height = h * dpr;
+      canvas.style.height = h + 'px';
+      ctx.scale(dpr, dpr);
+
+      // Seed determinista por id para que cada canvas tenga su propia forma
+      const seed = parseInt(canvas.closest('.player').dataset.player, 10) * 131;
+      function rnd(i) {
+        const x = Math.sin(seed + i * 12.9898) * 43758.5453;
+        return x - Math.floor(x);
+      }
+
+      const bars = 60;
+      const barW = w / bars;
+      ctx.fillStyle = 'rgba(136, 136, 136, .5)';
+
+      for (let i = 0; i < bars; i++) {
+        // Envelope: forma curvada suave (sube y baja)
+        const envelope = Math.sin((i / bars) * Math.PI) * 0.7 + 0.3;
+        const variation = rnd(i) * 0.6 + 0.4;
+        const barH = envelope * variation * h * 0.85;
+        const y = (h - barH) / 2;
+        ctx.fillRect(i * barW + 1, y, Math.max(1, barW - 2), barH);
+      }
+    }
+
+    // Redibujar en resize
+    window.addEventListener('resize', () => {
+      document.querySelectorAll('.wf').forEach(c => drawStaticWaveform(c));
+    });
   </script>
 </body>
 </html>
