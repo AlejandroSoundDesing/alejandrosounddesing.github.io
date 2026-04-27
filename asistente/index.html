@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sound Design Assistant — AGS</title>
+  <style>
+    :root {
+      --bg:     #ffffff;
+      --ink:    #0f0f0e;
+      --mid:    #7a7774;
+      --line:   #cccac4;
+      --accent: #e8380d;
+      --mono:   'Copperplate', 'Copperplate Gothic Light', fantasy;
+      --serif:  'Palatino Linotype', 'Palatino', 'Book Antiqua', serif;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--serif);
+      font-size: 18px;
+      line-height: 1.6;
+      overflow: hidden;
+      cursor: crosshair;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── GRAIN ── */
+    body::after {
+      content: ''; position: fixed; inset: -50%; width: 200%; height: 200%;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+      opacity: .025; pointer-events: none; z-index: 9999;
+      animation: grain .5s steps(1) infinite;
+    }
+    @keyframes grain {
+      0%,100% { transform: translate(0,0) }    10% { transform: translate(-2%,-1%) }
+      20%     { transform: translate(1%,2%) }   30% { transform: translate(-1%,1%) }
+      40%     { transform: translate(2%,-2%) }  50% { transform: translate(-2%,2%) }
+      60%     { transform: translate(1%,-1%) }  70% { transform: translate(-1%,2%) }
+      80%     { transform: translate(2%,1%) }   90% { transform: translate(-2%,-2%) }
+    }
+
+    /* ── NAV ── */
+    nav {
+      flex-shrink: 0;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1.1rem 3rem;
+      background: rgba(255,255,255,.93);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--line);
+      z-index: 100;
+    }
+    .logo {
+      font-family: var(--mono); font-size: .72rem;
+      letter-spacing: .12em; text-decoration: none; color: var(--ink);
+    }
+    .nav-meta {
+      font-family: var(--mono); font-size: .58rem;
+      color: var(--mid); letter-spacing: .1em; text-transform: uppercase;
+    }
+    .nav-tag {
+      font-family: var(--mono); font-size: .52rem; letter-spacing: .08em;
+      border: 1px solid var(--line); padding: .2rem .55rem; color: var(--mid);
+    }
+
+    /* ── MESSAGES AREA ── */
+    #chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0 3rem;
+      scroll-behavior: smooth;
+    }
+    #chat-messages::-webkit-scrollbar { width: 2px; }
+    #chat-messages::-webkit-scrollbar-thumb { background: var(--line); }
+
+    /* Empty state */
+    .empty-state {
+      display: flex; flex-direction: column; justify-content: center;
+      align-items: flex-start; height: 100%; gap: 1.5rem;
+      padding: 3rem 0;
+    }
+    .empty-eyebrow {
+      font-family: var(--mono); font-size: .56rem;
+      letter-spacing: .16em; text-transform: uppercase; color: var(--mid);
+    }
+    .empty-title {
+      font-family: var(--serif); font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+      font-weight: 400; font-style: italic; line-height: 1.15;
+    }
+    .empty-examples {
+      display: flex; flex-direction: column; gap: 0;
+      border-top: 1px solid var(--line); width: 100%; max-width: 560px;
+      margin-top: .5rem;
+    }
+    .example-btn {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: .85rem 0; border-bottom: 1px solid var(--line);
+      background: none; border-left: none; border-right: none;
+      border-top: none;
+      cursor: crosshair; color: var(--mid); text-align: left; width: 100%;
+      font-family: var(--serif); font-size: .95rem;
+      transition: color .2s;
+    }
+    .example-btn:hover { color: var(--ink); }
+    .example-btn:hover .ex-arrow { transform: translate(3px, -3px); }
+    .ex-arrow {
+      font-family: var(--mono); font-size: .75rem;
+      color: var(--line); flex-shrink: 0; margin-left: 1rem;
+      transition: transform .2s;
+    }
+    .example-btn:hover .ex-arrow { color: var(--accent); }
+
+    /* ── MENSAJES ── */
+    .msg-row {
+      border-top: 1px solid var(--line);
+      padding: 1.75rem 0;
+    }
+    .msg-row:first-child { border-top: none; margin-top: 2rem; }
+
+    /* etiqueta rol */
+    .msg-label {
+      font-family: var(--mono); font-size: .52rem;
+      letter-spacing: .14em; text-transform: uppercase;
+      color: var(--line); margin-bottom: .6rem;
+    }
+
+    /* mensaje usuario */
+    .msg-user .msg-label { color: var(--mid); text-align: right; }
+    .msg-user .msg-body {
+      font-family: var(--serif); font-size: 1rem; line-height: 1.7;
+      color: var(--ink);
+      background: rgba(15,15,14,.03);
+      border: 1px solid var(--line);
+      padding: 1rem 1.25rem;
+      max-width: 72%;
+      margin-left: auto;
+    }
+
+    /* mensaje asistente */
+    .msg-bot .msg-body {
+      font-family: var(--serif); font-size: 1rem; line-height: 1.85;
+      color: var(--ink);
+      border-left: 2px solid var(--line);
+      padding-left: 1.25rem;
+      max-width: 90%;
+    }
+
+    /* código en respuestas */
+    .msg-bot code {
+      font-family: var(--mono); font-size: .7rem;
+      background: rgba(15,15,14,.06);
+      border: 1px solid var(--line);
+      padding: .1em .45em;
+    }
+    .msg-bot pre {
+      font-family: var(--mono); font-size: .65rem; line-height: 1.7;
+      color: var(--mid); border-left: 2px solid var(--line);
+      padding: .75rem 1rem; margin: .75rem 0;
+      overflow-x: auto; white-space: pre;
+    }
+    .msg-bot pre code {
+      background: none; border: none; padding: 0; font-size: inherit;
+    }
+
+    /* Typing indicator */
+    .typing .msg-body {
+      color: var(--line); font-style: italic;
+    }
+    .dot-anim::after {
+      content: '';
+      animation: dots 1.2s steps(4, end) infinite;
+    }
+    @keyframes dots {
+      0%   { content: ''; }
+      25%  { content: '.'; }
+      50%  { content: '..'; }
+      75%  { content: '...'; }
+      100% { content: ''; }
+    }
+
+    /* ── INPUT ── */
+    #input-bar {
+      flex-shrink: 0;
+      border-top: 1px solid var(--line);
+      padding: 1.25rem 3rem;
+      background: rgba(255,255,255,.97);
+      backdrop-filter: blur(8px);
+      display: flex; gap: 1rem; align-items: flex-end;
+    }
+    #input-wrap {
+      flex: 1; position: relative;
+    }
+    #msg-input {
+      width: 100%;
+      font-family: var(--serif); font-size: 1rem;
+      color: var(--ink); background: transparent;
+      border: none; border-bottom: 1px solid var(--line);
+      padding: .5rem 0 .6rem;
+      resize: none; outline: none;
+      line-height: 1.55;
+      transition: border-color .2s;
+      cursor: crosshair;
+      min-height: 2.2rem; max-height: 8rem;
+      overflow-y: auto;
+    }
+    #msg-input::placeholder {
+      color: var(--line); font-style: italic;
+    }
+    #msg-input:focus { border-bottom-color: var(--ink); }
+
+    #send-btn {
+      font-family: var(--mono); font-size: .6rem; font-weight: 700;
+      letter-spacing: .06em;
+      border: 1px solid var(--ink);
+      padding: .55rem .9rem;
+      background: none; cursor: crosshair; color: var(--ink);
+      transition: background .2s, color .2s;
+      white-space: nowrap; flex-shrink: 0;
+      align-self: flex-end;
+    }
+    #send-btn:hover:not(:disabled) { background: var(--ink); color: var(--bg); }
+    #send-btn:disabled { opacity: .35; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 760px) {
+      nav { padding: 1rem 1.5rem; }
+      #chat-messages { padding: 0 1.5rem; }
+      #input-bar { padding: 1rem 1.5rem; }
+      .msg-user .msg-body { max-width: 90%; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="../index.html" class="logo">← AGS</a>
+    <div style="display:flex; align-items:center; gap:1.5rem;">
+      <span class="nav-meta">Sound Design Assistant</span>
+      <span class="nav-tag">RAG · Ableton</span>
+    </div>
+  </nav>
+
+  <!-- MENSAJES -->
+  <div id="chat-messages">
+    <div class="empty-state" id="empty-state">
+      <div class="empty-eyebrow">01 / asistente de síntesis</div>
+      <h1 class="empty-title">¿Qué sonido<br>estás buscando?</h1>
+      <div class="empty-examples">
+        <button class="example-btn" onclick="useExample(this)">
+          Pad oscuro y granular tipo Boards of Canada en Ableton
+          <span class="ex-arrow">↗</span>
+        </button>
+        <button class="example-btn" onclick="useExample(this)">
+          ¿Cómo diseño un kick con Operator?
+          <span class="ex-arrow">↗</span>
+        </button>
+        <button class="example-btn" onclick="useExample(this)">
+          Síntesis FM para texturas metálicas
+          <span class="ex-arrow">↗</span>
+        </button>
+        <button class="example-btn" onclick="useExample(this)">
+          Tengo los mids embarrados en la mezcla
+          <span class="ex-arrow">↗</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- INPUT -->
+  <div id="input-bar">
+    <div id="input-wrap">
+      <textarea
+        id="msg-input"
+        rows="1"
+        placeholder="Describe el sonido, pregunta sobre síntesis, EQ, efectos…"
+      ></textarea>
+    </div>
+    <button id="send-btn" onclick="sendMessage()">ENVIAR →</button>
+  </div>
+
+  <script>
+    const messagesEl = document.getElementById('chat-messages');
+    const inputEl    = document.getElementById('msg-input');
+    const sendBtn    = document.getElementById('send-btn');
+    const emptyEl    = document.getElementById('empty-state');
+
+    let history = [];
+    let isLoading = false;
+
+    // Auto-resize textarea
+    inputEl.addEventListener('input', () => {
+      inputEl.style.height = 'auto';
+      inputEl.style.height = Math.min(inputEl.scrollHeight, 128) + 'px';
+    });
+
+    // Enter sends, Shift+Enter newline
+    inputEl.addEventListener('keydown', e => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+      }
+    });
+
+    function useExample(btn) {
+      const text = btn.firstChild.textContent.trim();
+      inputEl.value = text;
+      inputEl.dispatchEvent(new Event('input'));
+      sendMessage();
+    }
+
+    function escapeHtml(str) {
+      return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+    }
+
+    // Very minimal markdown: **bold**, `code`, ```block```, line breaks
+    function renderMarkdown(text) {
+      // code blocks
+      text = text.replace(/```[\w]*\n?([\s\S]*?)```/g, (_, code) =>
+        `<pre><code>${escapeHtml(code.trim())}</code></pre>`
+      );
+      // inline code
+      text = text.replace(/`([^`]+)`/g, (_, code) =>
+        `<code>${escapeHtml(code)}</code>`
+      );
+      // bold
+      text = text.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+      // line breaks (outside of pre tags)
+      text = text.replace(/\n/g, '<br>');
+      return text;
+    }
+
+    function appendMessage(role, content, isTyping = false) {
+      if (emptyEl) emptyEl.remove();
+
+      const row = document.createElement('div');
+      row.className = `msg-row msg-${role === 'user' ? 'user' : 'bot'}${isTyping ? ' typing' : ''}`;
+
+      const label = document.createElement('div');
+      label.className = 'msg-label';
+      label.textContent = role === 'user' ? 'TÚ' : 'ASISTENTE —';
+
+      const body = document.createElement('div');
+      body.className = 'msg-body';
+
+      if (isTyping) {
+        body.innerHTML = '<span class="dot-anim">pensando</span>';
+      } else if (role === 'user') {
+        body.textContent = content;
+      } else {
+        body.innerHTML = renderMarkdown(content);
+      }
+
+      row.appendChild(label);
+      row.appendChild(body);
+      messagesEl.appendChild(row);
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+
+      return row;
+    }
+
+    async function sendMessage() {
+      const text = inputEl.value.trim();
+      if (!text || isLoading) return;
+
+      isLoading = true;
+      sendBtn.disabled = true;
+      inputEl.value = '';
+      inputEl.style.height = 'auto';
+
+      appendMessage('user', text);
+      const typingRow = appendMessage('assistant', '', true);
+
+      try {
+        const res = await fetch('/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: text, history })
+        });
+
+        if (!res.ok) throw new Error('Error del servidor');
+
+        const data = await res.json();
+        const reply = data.content;
+
+        history.push({ role: 'user', content: text });
+        history.push({ role: 'assistant', content: reply });
+
+        typingRow.classList.remove('typing');
+        typingRow.querySelector('.msg-body').innerHTML = renderMarkdown(reply);
+        messagesEl.scrollTop = messagesEl.scrollHeight;
+
+      } catch (err) {
+        typingRow.classList.remove('typing');
+        typingRow.querySelector('.msg-body').textContent = 'Error al conectar con el servidor.';
+      }
+
+      isLoading = false;
+      sendBtn.disabled = false;
+      inputEl.focus();
+    }
+  </script>
+</body>
+</html>

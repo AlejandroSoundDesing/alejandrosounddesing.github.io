@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Works — Alejandro García Soto</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=EB+Garamond:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:    #f4f3ef;
+      --ink:   #0f0f0e;
+      --mid:   #7a7774;
+      --line:  #cccac4;
+      --accent:#e8380d;
+      --mono:  'Space Mono', monospace;
+      --serif: 'EB Garamond', serif;
+    }
+
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--serif);
+      font-size: 18px;
+      line-height: 1.6;
+      overflow-x: hidden;
+      cursor: crosshair;
+    }
+
+    /* GRAIN */
+    body::after {
+      content:''; position:fixed; inset:-50%; width:200%; height:200%;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+      opacity:.025; pointer-events:none; z-index:9999;
+      animation: grain .5s steps(1) infinite;
+    }
+    @keyframes grain {
+      0%,100%{transform:translate(0,0)}   10%{transform:translate(-2%,-1%)}
+      20%{transform:translate(1%,2%)}     30%{transform:translate(-1%,1%)}
+      40%{transform:translate(2%,-2%)}    50%{transform:translate(-2%,2%)}
+      60%{transform:translate(1%,-1%)}    70%{transform:translate(-1%,2%)}
+      80%{transform:translate(2%,1%)}     90%{transform:translate(-2%,-2%)}
+    }
+
+    /* NAV */
+    nav {
+      position:fixed; top:0; left:0; right:0; z-index:200;
+      display:flex; justify-content:space-between; align-items:center;
+      padding:1.1rem 3rem;
+      background:rgba(244,243,239,.93);
+      backdrop-filter:blur(10px);
+      border-bottom:1px solid var(--line);
+    }
+    .logo { font-family:var(--mono); font-size:.72rem; letter-spacing:.12em; text-decoration:none; color:var(--ink); }
+    nav ul { list-style:none; display:flex; gap:2.5rem; }
+    nav a  { font-family:var(--mono); font-size:.63rem; letter-spacing:.09em; text-transform:uppercase; text-decoration:none; color:var(--mid); transition:color .2s; }
+    nav a:hover { color:var(--accent); }
+    nav a.active { color:var(--ink); }
+
+    /* PAGE HEADER */
+    .page-header {
+      padding:9rem 3rem 4rem;
+      border-bottom:1px solid var(--line);
+      display:flex; justify-content:space-between; align-items:flex-end;
+    }
+    .page-title {
+      font-family:var(--serif); font-size:clamp(3.5rem,9vw,8rem);
+      font-weight:400; font-style:italic; line-height:.95;
+    }
+    .page-meta {
+      font-family:var(--mono); font-size:.58rem;
+      color:var(--mid); letter-spacing:.1em;
+      text-align:right; line-height:2;
+    }
+
+    /* SECTIONS */
+    section { padding:5rem 3rem; border-top:1px solid var(--line); background:var(--bg); }
+    .sec-head { display:flex; align-items:baseline; gap:1.2rem; margin-bottom:3rem; }
+    .sec-num { font-family:var(--mono); font-size:.58rem; color:var(--line); letter-spacing:.1em; }
+    h2.sec-title { font-family:var(--serif); font-size:clamp(1.6rem,3vw,2.8rem); font-weight:400; font-style:italic; }
+
+    /* ── AUDIO ── */
+    .audio-list { display:flex; flex-direction:column; }
+
+    .audio-item {
+      display:grid;
+      grid-template-columns:44px 1fr 300px;
+      gap:2rem; align-items:center;
+      padding:1.8rem 0; border-bottom:1px solid var(--line);
+    }
+
+    .audio-num { font-family:var(--mono); font-size:.56rem; color:var(--line); }
+
+    .audio-info { display:flex; flex-direction:column; gap:.4rem; }
+    .audio-title { font-family:var(--serif); font-size:1.3rem; }
+    .audio-meta { font-family:var(--mono); font-size:.56rem; color:var(--mid); letter-spacing:.08em; text-transform:uppercase; }
+    .audio-tags { display:flex; gap:.35rem; flex-wrap:wrap; margin-top:.15rem; }
+    .audio-tag { font-family:var(--mono); font-size:.5rem; border:1px solid var(--line); padding:.15rem .5rem; color:var(--mid); }
+
+    /* Custom audio player */
+    .player { display:flex; flex-direction:column; gap:.7rem; }
+    .player audio { display:none; }
+    .player-row { display:flex; align-items:center; gap:.9rem; }
+    .play-btn {
+      font-family:var(--mono); font-size:.6rem; font-weight:700;
+      border:1px solid var(--ink); padding:.45rem .75rem;
+      background:none; cursor:crosshair; color:var(--ink);
+      transition:background .2s, color .2s; white-space:nowrap; min-width:84px;
+    }
+    .play-btn:hover, .play-btn.on { background:var(--ink); color:var(--bg); }
+    .play-btn.no-src { opacity:.35; pointer-events:none; }
+    .progress-rail {
+      flex:1; height:1px; background:var(--line);
+      position:relative; cursor:crosshair;
+    }
+    .progress-fill { height:100%; background:var(--ink); width:0%; transition:width .1s linear; }
+    .time-disp { font-family:var(--mono); font-size:.52rem; color:var(--mid); white-space:nowrap; min-width:32px; }
+
+    /* ── IMAGES ── */
+    .img-note {
+      font-family:var(--mono); font-size:.58rem; color:var(--mid);
+      letter-spacing:.08em; margin-bottom:2rem; line-height:1.8;
+    }
+    .img-note code {
+      background:rgba(15,15,14,.06); padding:.1rem .4rem;
+      font-family:var(--mono); font-size:.56rem;
+    }
+
+    .img-grid {
+      display:grid;
+      grid-template-columns:repeat(auto-fill, minmax(280px,1fr));
+      gap:2px;
+    }
+
+    .img-cell {
+      position:relative; overflow:hidden;
+      border:1px solid var(--line);
+      aspect-ratio:4/3;
+      background:#e6e4e0;
+      display:flex; align-items:center; justify-content:center;
+    }
+
+    .img-cell img {
+      width:100%; height:100%; object-fit:cover;
+      display:block; transition:opacity .3s;
+    }
+    .img-cell:hover img { opacity:.82; }
+
+    .img-caption {
+      position:absolute; bottom:0; left:0; right:0;
+      background:rgba(244,243,239,.92);
+      padding:.75rem 1rem;
+      opacity:0; transition:opacity .3s;
+    }
+    .img-cell:hover .img-caption { opacity:1; }
+    .img-cap-title { font-family:var(--serif); font-style:italic; font-size:.95rem; }
+    .img-cap-meta { font-family:var(--mono); font-size:.52rem; color:var(--mid); letter-spacing:.08em; text-transform:uppercase; margin-top:.12rem; }
+
+    /* Empty placeholder slots */
+    .img-ph {
+      width:100%; height:100%;
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      gap:.6rem; color:var(--line);
+      padding:1.5rem;
+    }
+    .img-ph pre { font-family:var(--mono); font-size:.46rem; line-height:1.5; text-align:center; }
+    .img-ph span { font-family:var(--mono); font-size:.5rem; letter-spacing:.12em; text-transform:uppercase; }
+    .img-ph-label { font-family:var(--mono); font-size:.56rem; letter-spacing:.1em; text-transform:uppercase; color:var(--mid); }
+
+    /* Wide slot */
+    .img-cell.wide { grid-column:span 2; aspect-ratio:16/7; }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top:1px solid var(--line);
+      padding:1.8rem 3rem;
+      display:flex; justify-content:space-between; align-items:center;
+      background:var(--bg);
+    }
+    footer p { font-family:var(--mono); font-size:.58rem; color:var(--mid); letter-spacing:.06em; }
+    footer a { color:var(--mid); text-decoration:none; }
+    footer a:hover { color:var(--accent); }
+
+    /* SCROLL REVEAL */
+    .reveal { opacity:0; transform:translateY(14px); transition:opacity .6s ease, transform .6s ease; }
+    .reveal.in { opacity:1; transform:none; }
+
+    /* RESPONSIVE */
+    @media (max-width:900px) {
+      nav { padding:1rem 1.5rem; }
+      section { padding:3.5rem 1.5rem; }
+      .page-header { padding:6.5rem 1.5rem 3rem; flex-direction:column; gap:1rem; align-items:flex-start; }
+      .audio-item { grid-template-columns:1fr; gap:.6rem; }
+      .player { width:100%; }
+      .img-cell.wide { grid-column:span 1; aspect-ratio:4/3; }
+    }
+    @media (max-width:560px) {
+      nav ul { gap:1rem; }
+      .img-grid { grid-template-columns:1fr 1fr; }
+    }
+    /* touch devices: restore natural cursor */
+    @media (hover: none) {
+      body, button { cursor:auto; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="index.html" class="logo">AGS —</a>
+    <ul>
+      <li><a href="index.html">Portfolio</a></li>
+      <li><a href="#audio" class="active">Audio</a></li>
+      <li><a href="#visual">Visual</a></li>
+      <li><a href="index.html#contact">Contacto</a></li>
+    </ul>
+  </nav>
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <h1 class="page-title">Works</h1>
+    <div class="page-meta">
+      ALEJANDRO GARCÍA SOTO<br>
+      SONIDO · IA · ARTE · MADRID<br>
+      <br>
+      ♩ ♪ ♫ ♬<br>
+      ∿∿∿∿∿∿∿∿∿
+    </div>
+  </div>
+
+  <!-- AUDIO -->
+  <section id="audio">
+    <div class="sec-head reveal">
+      <span class="sec-num">01 /</span>
+      <h2 class="sec-title">Audio</h2>
+    </div>
+
+    <div class="audio-list">
+
+      <!-- Track 1 — replace src="" with your audio file path -->
+      <div class="audio-item reveal">
+        <div class="audio-num">01</div>
+        <div class="audio-info">
+          <div class="audio-title">Título del track</div>
+          <div class="audio-meta">2025 · duración</div>
+          <div class="audio-tags">
+            <span class="audio-tag">Ambient</span>
+            <span class="audio-tag">Ableton</span>
+            <span class="audio-tag">Generativo</span>
+          </div>
+        </div>
+        <div class="player">
+          <audio src="" preload="none"></audio>
+          <div class="player-row">
+            <button class="play-btn">▷ PLAY</button>
+            <div class="progress-rail"><div class="progress-fill"></div></div>
+            <span class="time-disp">0:00</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Track 2 -->
+      <div class="audio-item reveal">
+        <div class="audio-num">02</div>
+        <div class="audio-info">
+          <div class="audio-title">Título del track</div>
+          <div class="audio-meta">2025 · duración</div>
+          <div class="audio-tags">
+            <span class="audio-tag">Electrónica</span>
+            <span class="audio-tag">Pure Data</span>
+            <span class="audio-tag">Síntesis</span>
+          </div>
+        </div>
+        <div class="player">
+          <audio src="" preload="none"></audio>
+          <div class="player-row">
+            <button class="play-btn">▷ PLAY</button>
+            <div class="progress-rail"><div class="progress-fill"></div></div>
+            <span class="time-disp">0:00</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Track 3 -->
+      <div class="audio-item reveal">
+        <div class="audio-num">03</div>
+        <div class="audio-info">
+          <div class="audio-title">Título del track</div>
+          <div class="audio-meta">2024 · duración</div>
+          <div class="audio-tags">
+            <span class="audio-tag">Videojuegos</span>
+            <span class="audio-tag">Orquestal</span>
+            <span class="audio-tag">Composición</span>
+          </div>
+        </div>
+        <div class="player">
+          <audio src="" preload="none"></audio>
+          <div class="player-row">
+            <button class="play-btn">▷ PLAY</button>
+            <div class="progress-rail"><div class="progress-fill"></div></div>
+            <span class="time-disp">0:00</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Track 4 -->
+      <div class="audio-item reveal">
+        <div class="audio-num">04</div>
+        <div class="audio-info">
+          <div class="audio-title">Título del track</div>
+          <div class="audio-meta">2024 · duración</div>
+          <div class="audio-tags">
+            <span class="audio-tag">Teatro</span>
+            <span class="audio-tag">Sound Design</span>
+          </div>
+        </div>
+        <div class="player">
+          <audio src="" preload="none"></audio>
+          <div class="player-row">
+            <button class="play-btn">▷ PLAY</button>
+            <div class="progress-rail"><div class="progress-fill"></div></div>
+            <span class="time-disp">0:00</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- VISUAL -->
+  <section id="visual">
+    <div class="sec-head reveal">
+      <span class="sec-num">02 /</span>
+      <h2 class="sec-title">Arte &amp; Visual</h2>
+    </div>
+
+    <p class="img-note reveal">
+      Para añadir imágenes: reemplaza los slots de abajo con <code>&lt;img src="tu-imagen.jpg"&gt;</code><br>
+      o arrastra tus archivos a la misma carpeta que este HTML y actualiza los src.
+    </p>
+
+    <div class="img-grid reveal">
+
+      <!-- Slot 1: wide — ideal para la composición digital colorida -->
+      <div class="img-cell wide">
+        <!-- <img src="tu-imagen.jpg" alt="título"> -->
+        <div class="img-ph">
+          <pre>
+░░░░░░░░░░░░░░░░░
+░  ╔═══════╗   ░
+░  ║ IMAGEN ║   ░
+░  ║  wide  ║   ░
+░  ╚═══════╝   ░
+░░░░░░░░░░░░░░░░░
+          </pre>
+          <span class="img-ph-label">Arte digital / composición</span>
+        </div>
+        <div class="img-caption">
+          <div class="img-cap-title">Título de la obra</div>
+          <div class="img-cap-meta">Arte Digital · 2025</div>
+        </div>
+      </div>
+
+      <!-- Slot 2: dibujo a mano (el skull/wings) -->
+      <div class="img-cell">
+        <!-- <img src="dibujo.jpg" alt="dibujo"> -->
+        <div class="img-ph">
+          <pre>
+  /\  ~~  /\
+ /  \/    \/\
+|   [dibujo]  |
+ \           /
+  ~~~~~~~~~~~
+          </pre>
+          <span class="img-ph-label">Dibujo / Ilustración</span>
+        </div>
+        <div class="img-caption">
+          <div class="img-cap-title">Título</div>
+          <div class="img-cap-meta">Lápiz · 2024</div>
+        </div>
+      </div>
+
+      <!-- Slot 3: visualización de datos / processing -->
+      <div class="img-cell">
+        <!-- <img src="dataviz.png" alt="data visualization"> -->
+        <div class="img-ph">
+          <pre>
+ · · ·  · ·
+·  · ·· · ·
+ · ·  ·  ·
+  ·  [data]
+ ·  · ·  ·
+· · ·  · ·
+          </pre>
+          <span class="img-ph-label">Data visualization</span>
+        </div>
+        <div class="img-caption">
+          <div class="img-cap-title">Visualización de audio</div>
+          <div class="img-cap-meta">Processing / Python · 2025</div>
+        </div>
+      </div>
+
+      <!-- Slot 4 -->
+      <div class="img-cell">
+        <!-- <img src="imagen4.jpg" alt=""> -->
+        <div class="img-ph">
+          <pre>
+≋≋≋≋≋≋≋≋≋≋
+≈ [imagen] ≈
+≋≋≋≋≋≋≋≋≋≋
+          </pre>
+          <span class="img-ph-label">Imagen 4</span>
+        </div>
+        <div class="img-caption">
+          <div class="img-cap-title">Título</div>
+          <div class="img-cap-meta">Medio · Año</div>
+        </div>
+      </div>
+
+      <!-- Slot 5 -->
+      <div class="img-cell">
+        <!-- <img src="imagen5.jpg" alt=""> -->
+        <div class="img-ph">
+          <pre>
+▓▓▓▓▓▓▓▓▓▓
+▒  [slot]  ▒
+░░░░░░░░░░
+          </pre>
+          <span class="img-ph-label">Imagen 5</span>
+        </div>
+        <div class="img-caption">
+          <div class="img-cap-title">Título</div>
+          <div class="img-cap-meta">Medio · Año</div>
+        </div>
+      </div>
+
+      <!-- Slot 6 -->
+      <div class="img-cell">
+        <!-- <img src="imagen6.jpg" alt=""> -->
+        <div class="img-ph">
+          <pre>
+∿∿∿∿∿∿∿∿
+∿ [add]  ∿
+∿∿∿∿∿∿∿∿
+          </pre>
+          <span class="img-ph-label">Imagen 6</span>
+        </div>
+        <div class="img-caption">
+          <div class="img-cap-title">Título</div>
+          <div class="img-cap-meta">Medio · Año</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p><a href="index.html">← Volver al portfolio</a></p>
+    <p>♩ ♪ ♫ ♬  ∿∿∿∿∿∿∿∿∿∿∿</p>
+  </footer>
+
+  <script>
+    // ── AUDIO PLAYERS ─────────────────────────────────────────
+    let currentAudio = null;
+
+    document.querySelectorAll('.audio-item').forEach(item => {
+      const audio = item.querySelector('audio');
+      const btn   = item.querySelector('.play-btn');
+      const fill  = item.querySelector('.progress-fill');
+      const timer = item.querySelector('.time-disp');
+
+      // If no src set, disable
+      if (!audio.src || audio.src === window.location.href) {
+        btn.classList.add('no-src');
+        btn.textContent = '— —';
+        return;
+      }
+
+      btn.addEventListener('click', () => {
+        if (audio.paused) {
+          // Pause whatever was playing
+          if (currentAudio && currentAudio !== audio) {
+            currentAudio.pause();
+            const prevBtn = currentAudio.closest('.audio-item').querySelector('.play-btn');
+            prevBtn.textContent = '▷ PLAY';
+            prevBtn.classList.remove('on');
+            currentAudio.closest('.audio-item').querySelector('.progress-fill').style.width = '0%';
+          }
+          audio.play();
+          btn.textContent = '▐▐ PAUSE';
+          btn.classList.add('on');
+          currentAudio = audio;
+        } else {
+          audio.pause();
+          btn.textContent = '▷ PLAY';
+          btn.classList.remove('on');
+        }
+      });
+
+      audio.addEventListener('timeupdate', () => {
+        if (!audio.duration) return;
+        const pct = (audio.currentTime / audio.duration) * 100;
+        fill.style.width = pct + '%';
+        const m = Math.floor(audio.currentTime / 60);
+        const s = String(Math.floor(audio.currentTime % 60)).padStart(2, '0');
+        timer.textContent = `${m}:${s}`;
+      });
+
+      audio.addEventListener('ended', () => {
+        btn.textContent = '▷ PLAY';
+        btn.classList.remove('on');
+        fill.style.width = '0%';
+        timer.textContent = '0:00';
+      });
+
+      // Click on progress rail to seek
+      item.querySelector('.progress-rail').addEventListener('click', e => {
+        if (!audio.duration) return;
+        const rect = e.currentTarget.getBoundingClientRect();
+        audio.currentTime = ((e.clientX - rect.left) / rect.width) * audio.duration;
+      });
+    });
+
+    // ── SCROLL REVEAL ─────────────────────────────────────────
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+    }, { threshold: 0.06 });
+    document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+  </script>
+</body>
+</html>

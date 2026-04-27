@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+*.pkl
+
+# Datos locales (demasiado grandes o privados)
+Asistente Sound Desing/chroma_db/
+Asistente Sound Desing/docs/
+AI-music-detector/
+
+# Carpetas con nombres con espacios (versión de trabajo — ya están copiadas a la raíz)
+Index principal+audio para avatar /
+Asistente Sound Desing/
+
+# Archivos grandes de media
+*.mp4
+*.mov
+*.png
+
+# Sistema
+.DS_Store
+.wrangler/
+*.log
+.env

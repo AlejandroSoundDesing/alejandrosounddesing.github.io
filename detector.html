@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IA Music Detector — AGS</title>
+  <style>
+    :root {
+      --bg:     #ffffff;
+      --ink:    #0f0f0e;
+      --mid:    #7a7774;
+      --line:   #cccac4;
+      --accent: #e8380d;
+      --mono:   'Copperplate', 'Copperplate Gothic Light', fantasy;
+      --serif:  'Palatino Linotype', 'Palatino', 'Book Antiqua', serif;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--serif);
+      font-size: 18px;
+      line-height: 1.6;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── GRAIN ── */
+    body::after {
+      content: ''; position: fixed; inset: -50%; width: 200%; height: 200%;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+      opacity: .025; pointer-events: none; z-index: 9999;
+      animation: grain .5s steps(1) infinite;
+    }
+    @keyframes grain {
+      0%,100% { transform: translate(0,0) }    10% { transform: translate(-2%,-1%) }
+      20%     { transform: translate(1%,2%) }   30% { transform: translate(-1%,1%) }
+      40%     { transform: translate(2%,-2%) }  50% { transform: translate(-2%,2%) }
+      60%     { transform: translate(1%,-1%) }  70% { transform: translate(-1%,2%) }
+      80%     { transform: translate(2%,1%) }   90% { transform: translate(-2%,-2%) }
+    }
+
+    /* ── NAV ── */
+    nav {
+      flex-shrink: 0;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1.1rem 3rem;
+      background: rgba(255,255,255,.93);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--line);
+      z-index: 100;
+    }
+    .logo {
+      font-family: var(--mono); font-size: .72rem;
+      letter-spacing: .12em; text-decoration: none; color: var(--ink);
+      transition: color .2s;
+    }
+    .logo:hover { color: var(--accent); }
+    .nav-meta {
+      font-family: var(--mono); font-size: .58rem;
+      color: var(--mid); letter-spacing: .1em; text-transform: uppercase;
+    }
+    .nav-tag {
+      font-family: var(--mono); font-size: .52rem; letter-spacing: .08em;
+      border: 1px solid var(--line); padding: .2rem .55rem; color: var(--mid);
+    }
+
+    /* ── MAIN ── */
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── HEADER ── */
+    .page-header {
+      padding: 3rem 3rem 2rem;
+      border-bottom: 1px solid var(--line);
+    }
+    .page-eyebrow {
+      font-family: var(--mono); font-size: .56rem;
+      letter-spacing: .16em; text-transform: uppercase; color: var(--mid);
+      margin-bottom: .8rem;
+    }
+    .page-title {
+      font-family: var(--serif); font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+      font-weight: 400; font-style: italic; line-height: 1.15;
+      margin-bottom: .6rem;
+    }
+    .page-desc {
+      font-family: var(--serif); font-size: 1rem; color: var(--mid); line-height: 1.65;
+      max-width: 560px;
+    }
+
+    /* ── IFRAME WRAPPER ── */
+    .frame-wrap {
+      flex: 1;
+      position: relative;
+      min-height: 600px;
+    }
+
+    #app-frame {
+      width: 100%;
+      height: 100%;
+      min-height: 600px;
+      border: none;
+      display: block;
+    }
+
+    /* ── FALLBACK (se muestra si el iframe falla) ── */
+    .fallback {
+      display: none;
+      padding: 3rem;
+      text-align: center;
+    }
+    .fallback.visible { display: block; }
+
+    .fallback-box {
+      max-width: 480px;
+      margin: 0 auto;
+      border: 1px solid var(--line);
+      padding: 2.5rem;
+    }
+    .fallback-num {
+      font-family: var(--mono); font-size: .52rem;
+      letter-spacing: .14em; text-transform: uppercase; color: var(--line);
+      margin-bottom: 1.2rem;
+    }
+    .fallback-title {
+      font-family: var(--serif); font-size: 1.4rem; font-style: italic;
+      margin-bottom: 1rem;
+    }
+    .fallback-body {
+      font-size: .9rem; color: var(--mid); line-height: 1.7;
+    }
+    .fallback-cmd {
+      font-family: var(--mono); font-size: .72rem;
+      background: rgba(15,15,14,.05); border: 1px solid var(--line);
+      padding: .6rem 1rem; margin-top: 1.4rem;
+      display: inline-block; color: var(--ink);
+      letter-spacing: .04em;
+    }
+    .fallback-tag {
+      display: inline-flex; gap: .6rem; flex-wrap: wrap;
+      justify-content: center; margin-top: 1.2rem;
+    }
+    .tag {
+      font-family: var(--mono); font-size: .5rem;
+      letter-spacing: .08em; text-transform: uppercase;
+      border: 1px solid var(--line); padding: .25rem .6rem; color: var(--mid);
+    }
+
+    /* ── STATUS BAR ── */
+    .status-bar {
+      flex-shrink: 0;
+      border-top: 1px solid var(--line);
+      padding: .6rem 3rem;
+      display: flex; justify-content: space-between; align-items: center;
+      background: rgba(255,255,255,.97);
+    }
+    .status-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--line); display: inline-block;
+      margin-right: .5rem;
+      transition: background .3s;
+    }
+    .status-dot.online { background: #22c55e; }
+    .status-text {
+      font-family: var(--mono); font-size: .52rem;
+      letter-spacing: .1em; text-transform: uppercase; color: var(--mid);
+      display: flex; align-items: center;
+    }
+    .status-tech {
+      font-family: var(--mono); font-size: .48rem;
+      color: var(--line); letter-spacing: .06em;
+    }
+
+    @media (max-width: 760px) {
+      nav { padding: 1rem 1.5rem; }
+      .page-header { padding: 2rem 1.5rem 1.5rem; }
+      .status-bar { padding: .6rem 1.5rem; }
+    }
+  </style>
+
+  <style>
+    /* ── INTRO OVERLAY ── */
+    #intro-overlay {
+      position: fixed; inset: 0; z-index: 99999;
+      background: #0f0f0e;
+      display: flex; align-items: center; justify-content: center;
+      transition: opacity 1.2s ease;
+    }
+    #intro-overlay.fade-out { opacity: 0; pointer-events: none; }
+
+    #glitch-canvas {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+    }
+
+    #intro-ui {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column;
+      justify-content: space-between;
+      padding: 2rem 3rem;
+      pointer-events: none;
+    }
+
+    #intro-logo {
+      font-family: var(--mono); font-size: .72rem;
+      letter-spacing: .12em; color: rgba(255,255,255,.55);
+    }
+
+    #intro-bottom {
+      display: flex; justify-content: space-between; align-items: flex-end;
+    }
+
+    #intro-label {
+      font-family: var(--mono); font-size: .5rem;
+      letter-spacing: .18em; text-transform: uppercase;
+      color: rgba(255,255,255,.3); line-height: 1.8;
+    }
+
+    #intro-enter {
+      font-family: var(--mono); font-size: .58rem;
+      letter-spacing: .16em; text-transform: uppercase;
+      color: rgba(255,255,255,.5);
+      pointer-events: all; cursor: pointer;
+      border: 1px solid rgba(255,255,255,.2);
+      padding: .45rem 1rem;
+      background: none;
+      transition: color .2s, border-color .2s;
+      animation: introBlip 2.4s ease-in-out infinite;
+    }
+    #intro-enter:hover { color: rgba(255,255,255,.9); border-color: rgba(255,255,255,.6); }
+
+    @keyframes introBlip {
+      0%, 100% { opacity: .5; }
+      50%       { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── INTRO OVERLAY ── -->
+  <div id="intro-overlay">
+    <canvas id="glitch-canvas"></canvas>
+    <div id="intro-ui">
+      <div id="intro-logo">AGS —</div>
+      <div id="intro-bottom">
+        <div id="intro-label">
+          IA Music Detector<br>
+          análisis de audio · ml
+        </div>
+        <button id="intro-enter">entrar →</button>
+      </div>
+    </div>
+  </div>
+
+  <nav>
+    <a href="index.html" class="logo">← AGS</a>
+    <div style="display:flex; align-items:center; gap:1.5rem;">
+      <span class="nav-meta">IA Music Detector</span>
+      <span class="nav-tag">ML · librosa · sklearn</span>
+    </div>
+  </nav>
+
+  <main>
+    <div class="page-header">
+      <div class="page-eyebrow">02 / proyecto de ia</div>
+      <h1 class="page-title">¿IA o humano?</h1>
+      <p class="page-desc">
+        Sube un archivo de audio y el modelo analiza MFCCs, centroide espectral, ZCR y tempo
+        para determinar si fue generado por IA o compuesto por una persona.
+      </p>
+    </div>
+
+    <div class="frame-wrap" id="frame-wrap">
+      <iframe
+        id="app-frame"
+        src="https://money4girls-ai-music-detector.hf.space"
+        title="AI Music Detector"
+        sandbox="allow-scripts allow-same-origin allow-forms"
+        onload="handleLoad()"
+        onerror="handleError()"
+      ></iframe>
+
+      <div class="fallback" id="fallback">
+        <div class="fallback-box">
+          <div class="fallback-num">servidor no detectado</div>
+          <div class="fallback-title">La app necesita el servidor local</div>
+          <div class="fallback-body">
+            El detector corre en Python con Gradio. Arráncalo desde terminal y recarga esta página.
+          </div>
+          <div class="fallback-cmd">python app.py</div>
+          <div style="margin-top:.5rem; font-family:var(--mono); font-size:.56rem; color:var(--mid);">
+            desde /AI-music-detector/ai-music-detector/
+          </div>
+          <div class="fallback-tag">
+            <span class="tag">librosa</span>
+            <span class="tag">sklearn</span>
+            <span class="tag">gradio</span>
+            <span class="tag">MFCCs</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="status-bar">
+      <div class="status-text">
+        <span class="status-dot" id="status-dot"></span>
+        <span id="status-label">comprobando servidor…</span>
+      </div>
+      <div class="status-tech">librosa · Random Forest · 30s audio · 32 features</div>
+    </div>
+  </main>
+
+  <script>
+    const dot   = document.getElementById('status-dot');
+    const label = document.getElementById('status-label');
+    const fallback = document.getElementById('fallback');
+    const frame = document.getElementById('app-frame');
+    let loaded = false;
+
+    function handleLoad() {
+      loaded = true;
+      dot.classList.add('online');
+      label.textContent = 'servidor activo · localhost:7860';
+      fallback.classList.remove('visible');
+    }
+
+    function handleError() {
+      showOffline();
+    }
+
+    function showOffline() {
+      dot.classList.remove('online');
+      label.textContent = 'servidor offline';
+      frame.style.display = 'none';
+      fallback.classList.add('visible');
+    }
+
+    // HF Spaces puede tardar hasta 30s en despertar desde cold start
+    setTimeout(() => {
+      if (!loaded) showOffline();
+    }, 30000);
+  </script>
+
+  <script>
+    // ── GLITCH INTRO (estilo T69 Collapse) ────────────────────────────
+    const overlay  = document.getElementById('intro-overlay');
+    const GC       = document.getElementById('glitch-canvas');
+    const GX       = GC.getContext('2d');
+    const enterBtn = document.getElementById('intro-enter');
+    let introDone  = false;
+    let running    = true;
+
+    function resizeGC() { GC.width = window.innerWidth; GC.height = window.innerHeight; }
+    resizeGC();
+    window.addEventListener('resize', resizeGC);
+
+    // ── Hiss de serpiente ─────────────────────────────────────────────
+    function playSnakeHiss() {
+      try {
+        const ac  = new (window.AudioContext || window.webkitAudioContext)();
+        const dur = 2.5, len = ac.sampleRate * dur;
+        const buf = ac.createBuffer(1, len, ac.sampleRate);
+        const d   = buf.getChannelData(0);
+        for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+        const src  = ac.createBufferSource(); src.buffer = buf;
+        const bp   = ac.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 3200; bp.Q.value = 0.7;
+        const lp   = ac.createBiquadFilter(); lp.type  = 'lowpass';  lp.frequency.value = 6000;
+        const gain = ac.createGain();
+        const t    = ac.currentTime;
+        gain.gain.setValueAtTime(0, t);
+        gain.gain.linearRampToValueAtTime(0.2, t + 0.4);
+        gain.gain.linearRampToValueAtTime(0, t + dur);
+        src.connect(bp); bp.connect(lp); lp.connect(gain); gain.connect(ac.destination);
+        src.start(t);
+      } catch(e) {}
+    }
+
+    function dismissIntro() {
+      if (introDone) return;
+      introDone = true;
+      running = false;
+      playSnakeHiss();
+      overlay.classList.add('fade-out');
+      setTimeout(() => overlay.remove(), 1300);
+    }
+
+    // ── Contenido del código ──────────────────────────────────────────
+    const CODE = [
+      '{ "artist" : "alejandro_garcia_soto" ,',
+      '  "city"   : "madrid_es" ,',
+      '  "role"   : "sound_designer" ,',
+      '  "daw"    : "ableton_live" ,',
+      '  "synth"  : "pure_data~" ,',
+      '  "osc~"   : [ 440, 880, 220, 110 ] ,',
+      '  "mfcc_features"     : 32 ,',
+      '  "sample_rate"       : 48000 ,',
+      '  "spectral_centroid" : 2840.3 ,',
+      '  "zcr"    : 0.0412 ,',
+      '  "tempo"  : 138.0 ,',
+      '  "model"  : "random_forest" ,',
+      '  "accuracy" : 0.923 ,',
+      '  "tracks" : {',
+      '    "track_1" : { "out" : "pro1"    } ,',
+      '    "track_2" : { "out" : "arp2500" } ,',
+      '    "track_3" : { "out" : "rytm"    } ,',
+      '    "track_4" : { "out" : "mks50"   } ,',
+      '    "track_5" : { "out" : "tx816w"  } ,',
+      '  } ,',
+      '  "seq" : {',
+      '    "C 4" : [ 127,127,127,127 ] ,',
+      '    "vel" : [ 24, 24, 24, 24  ] ,',
+      '    "len" : [ 0.5,0.5,0.5,0.5 ] ,',
+      '  } ,',
+      '  "last_step" : true ,',
+      '  "ags"  : "1.0.0"',
+      '}',
+      '',
+      '> loading random_forest.pkl...',
+      '> extracting mfcc features...',
+      '> spectral_centroid  OK',
+      '> zero_crossing_rate OK',
+      '> tempo detection    OK',
+      '> predicting...',
+      '> resultado : HUMANO',
+      '',
+      '[ osc~ 440 ] -> [ lop~ 900 ]',
+      '[ hip~ 60  ] -> [ dac~     ]',
+      '[ env~ 512 ] -> [ reverb~  ]',
+      '[ adc~     ] -> [ mtof     ]',
+      '',
+      'alejandro garcia soto',
+      'sound design · madrid · ia',
+      '440hz · 48khz · 32 mfcc',
+      '',
+    ];
+
+
+    // ── Texto corrupto ────────────────────────────────────────────────
+    const SUBS = [
+      'alejandro garcia soto',
+      'diseño de sonido · madrid',
+      'ia music detector · ags',
+      'pure data  osc~ dac~',
+      '440hz · 48khz · 32 features',
+      'inteligencia artificial',
+      'analisis de audio · ml',
+      'madrid 2025 · sound design',
+    ];
+    const GLYPHS = '!@#$%&*[]{}|<>?\\/01';
+    function corrupt(s, amt) {
+      return [...s].map(c => c !== ' ' && Math.random() < amt
+        ? GLYPHS[Math.floor(Math.random() * GLYPHS.length)] : c).join('');
+    }
+
+    // ── Estado ────────────────────────────────────────────────────────
+    let gT = 0, scroll = 0, bars = [], subIdx = 0, subT = 0, lastTs = null;
+
+    function glitchFrame(ts) {
+      if (!running) return;
+      const dt = lastTs ? Math.min((ts - lastTs) / 1000, 0.05) : 0.016;
+      lastTs = ts;
+      gT += dt;
+
+      const W = GC.width, H = GC.height;
+
+      GX.fillStyle = 'rgba(0,0,0,0.86)';
+      GX.fillRect(0, 0, W, H);
+
+      // ── Código scrolleando ────────────────────────────────────────
+      const LH = 13;
+      GX.font = '11px "Courier New", Courier, monospace';
+      GX.textBaseline = 'top';
+      scroll += dt * 24;
+      const totalH = CODE.length * LH;
+      const sy = -(scroll % totalH);
+
+      for (let pass = 0; pass < 2; pass++) {
+        const oY = pass === 0 ? sy : sy + totalH;
+        CODE.forEach((line, i) => {
+          const y = oY + i * LH;
+          if (y < -LH || y > H) return;
+          const dx = Math.random() < 0.018 ? (Math.random() - 0.5) * 28 : 0;
+          let col;
+          if (line.startsWith('>'))                                    col = 'rgba(80,210,140,0.88)';
+          else if (line.includes('alejandro') || line.includes('ags')) col = 'rgba(255,255,255,0.95)';
+          else if (line.includes('madrid') || line.includes('sonido')) col = 'rgba(220,220,210,0.8)';
+          else if (line.includes('osc~') || line.includes('hz'))       col = 'rgba(100,190,255,0.75)';
+          else col = `rgba(185,185,180,${0.3 + Math.random() * 0.38})`;
+          GX.fillStyle = col;
+          GX.fillText(line, 18 + dx, y);
+        });
+      }
+
+
+      // ── Barras de glitch ──────────────────────────────────────────
+      if (Math.random() < (0.5 + Math.min(2.5, gT * 0.22)) * dt * 4) {
+        bars.push({
+          y: Math.random() * H, h: 1 + Math.random() * 16,
+          life: 0.05 + Math.random() * 0.14, age: 0,
+          red: Math.random() < 0.45, dx: (Math.random() - 0.5) * 70,
+        });
+      }
+      bars = bars.filter(b => {
+        b.age += dt;
+        const p = b.age / b.life;
+        if (p >= 1) return false;
+        const a = (1 - p) * 0.92;
+        GX.fillStyle = b.red ? `rgba(232,56,13,${a})` : `rgba(255,255,255,${a * 0.1})`;
+        GX.fillRect(0, b.y, W, b.h);
+        if (Math.abs(b.dx) > 8) {
+          GX.fillStyle = b.red ? `rgba(232,56,13,${a * 0.35})` : `rgba(255,255,255,${a * 0.05})`;
+          GX.fillRect(b.dx > 0 ? 0 : W + b.dx, b.y, Math.abs(b.dx), b.h);
+        }
+        return true;
+      });
+
+      // ── Texto corrupto abajo ──────────────────────────────────────
+      subT += dt;
+      if (subT > 0.11) { subT = 0; if (Math.random() < 0.28) subIdx = (subIdx + 1) % SUBS.length; }
+      const amt  = 0.26 + Math.sin(gT * 5) * 0.11;
+      const sub1 = corrupt(SUBS[subIdx], amt);
+      const sub2 = corrupt(SUBS[(subIdx + 1) % SUBS.length], amt + 0.18);
+      const subY = H - 68;
+      GX.font = '12px "Courier New", Courier, monospace';
+      GX.fillStyle = `rgba(232,56,13,${0.78 + Math.sin(gT * 9) * 0.12})`;
+      GX.fillRect(0, subY - 3, W, 19);
+      GX.fillStyle = '#ffffff';
+      GX.fillText(sub1, 18, subY);
+      GX.fillStyle = 'rgba(155,155,150,0.5)';
+      GX.fillText('——' + sub2, 18, subY + 21);
+
+      // ── Ruido de píxeles ──────────────────────────────────────────
+      if (Math.random() < 0.32) {
+        for (let n = 0; n < 140; n++) {
+          const v = Math.floor(Math.random() * 210);
+          GX.fillStyle = `rgba(${v},${v},${v},0.45)`;
+          GX.fillRect(Math.random() * W, Math.random() * H, 2, 2);
+        }
+      }
+
+      requestAnimationFrame(glitchFrame);
+    }
+
+    requestAnimationFrame(glitchFrame);
+
+    // Auto-dismiss a los 12s
+    setTimeout(() => { if (!introDone) dismissIntro(); }, 12000);
+
+    enterBtn.addEventListener('click', dismissIntro);
+    overlay.addEventListener('click', e => { if (e.target !== enterBtn) dismissIntro(); });
+  </script>
+
+</body>
+</html>
