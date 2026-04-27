@@ -380,7 +380,7 @@
       const typingRow = appendMessage('assistant', '', true);
 
       try {
-        const res = await fetch('/chat', {
+        const res = await fetch('https://money4girls-sound-assistant.hf.space/chat', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ message: text, history })
